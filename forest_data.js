@@ -116,7 +116,8 @@ const forestData = [
     "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=ID02030099",
     "address": "경기 가평군 가평읍 경반안로 454 칼봉산자연휴양림",
     "phone": "031-8078-8062",
-    "closed": ""
+    "closed": "",
+    "isAd": true
   },
   {
     "name": "태백고원자연휴양림",
@@ -1256,5 +1257,6 @@ const forestData = [
 
 // 모듈 환경과 브라우저 환경 모두 호환되도록 설정
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = forestData;
-}
+  module.exports = forestData;
+}e x p o r t   d e f a u l t   f o r e s t D a t a ;  
+ 

@@ -18,6 +18,7 @@ export interface Forest {
   tags: string[];
   imageUrl: string;
   bookingUrl: string;
+  isAd?: boolean;
 }
 
 export interface ReservationStep {

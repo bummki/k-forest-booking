@@ -98,6 +98,7 @@ export const FORESTS: Forest[] = rawList.map((f, index) => {
     description: `${address}. ${f.phone || ''}. ${f.closed ? `휴무: ${f.closed}.` : ''}`,
     tags: tags,
     imageUrl: `https://picsum.photos/seed/${encodeURIComponent(name)}/600/400`,
-    bookingUrl: f.url || 'https://www.foresttrip.go.kr/'
+    bookingUrl: f.url || 'https://www.foresttrip.go.kr/',
+    isAd: !!f.isAd
   };
 });
