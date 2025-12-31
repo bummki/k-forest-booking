@@ -22,7 +22,8 @@ const AdUnit: React.FC<{ slot: string; format?: string; className?: string }> = 
   }, []);
 
   return (
-    <div className={`ads-container w-full max-w-7xl mx-auto px-4 overflow-hidden ${className}`}>
+    <div className={`adsense-container w-full max-w-7xl mx-auto px-4 overflow-hidden ${className}`}>
+      {/* 애드센스 코드 */}
       <ins className="adsbygoogle"
         style={{ display: 'block' }}
         data-ad-client="ca-pub-2695727848475573"
@@ -198,13 +199,7 @@ const App: React.FC = () => {
                           {forest.region}
                         </span>
                       </div>
-                      {forest.isAd && (
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                          <span className="text-red-500 font-black text-6xl md:text-7xl rotate-[-12deg] border-8 border-red-500 px-6 py-2 rounded-2xl opacity-80 select-none tracking-tighter">
-                            광고
-                          </span>
-                        </div>
-                      )}
+                      {/* Ad Stamp Removed */}
                     </div>
                     <div className="p-8 flex flex-col flex-1 space-y-4">
                       <h3 className="text-xl font-black text-stone-800">{forest.name}</h3>
@@ -235,12 +230,11 @@ const App: React.FC = () => {
                   </div>
 
                   {/* 리스트 중간 광고 삽입 (6번째 아이템마다 가로형 광고 노출) */}
+                  {/* 리스트 중간 광고 삽입 (6번째 아이템마다) */}
                   {(index + 1) % 6 === 0 && (
-                    <div className="col-span-1 md:col-span-2 lg:col-span-3 py-4">
-                      <div className="bg-white p-4 rounded-[2rem] border border-stone-100 shadow-sm">
-                        <p className="text-[10px] text-stone-300 font-bold uppercase tracking-widest mb-2 px-4 text-center">Sponsored Content</p>
-                        <AdUnit slot="7932374339" format="horizontal" />
-                      </div>
+                    <div className="adsense-container col-span-1 md:col-span-2 lg:col-span-3 w-full py-8">
+                      {/* 애드센스 코드 */}
+                      <AdUnit slot="7932374339" format="auto" className="" />
                     </div>
                   )}
                 </React.Fragment>
