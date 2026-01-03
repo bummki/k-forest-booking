@@ -22,108 +22,41 @@ const AdUnit: React.FC<{ slot: string; format?: string; className?: string }> = 
   }, []);
 
   return (
-    <div className={`ads-container w-full max-w-7xl mx-auto px-4 overflow-hidden ${className}`}>
+    <div className={`adsense-container w-full max-w-7xl mx-auto px-4 overflow-hidden ${className}`}>
+      {/* 애드센스 코드 */}
       <ins className="adsbygoogle"
-           style={{ display: 'block' }}
-           data-ad-client="ca-pub-2695727848475573"
-           data-ad-slot={slot}
-           data-ad-format={format}
-           data-full-width-responsive="true"></ins>
+        style={{ display: 'block' }}
+        data-ad-client="ca-pub-2695727848475573"
+        data-ad-slot={slot}
+        data-ad-format={format}
+        data-full-width-responsive="true"></ins>
     </div>
   );
 };
 
 const App: React.FC = () => {
-  const [viewMode, setViewMode] = useState<'gate' | 'content'>('gate');
+  // const [viewMode, setViewMode] = useState<'gate' | 'content'>('gate'); // Removed for direct access
   const [selectedRegion, setSelectedRegion] = useState<Region>(Region.ALL);
   const explorerRef = useRef<HTMLElement>(null);
 
-  const enterSite = () => {
-    setViewMode('content');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // enterSite removed
 
   const scrollToExplorer = () => {
     explorerRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const filteredForests = selectedRegion === Region.ALL 
-    ? FORESTS 
+  const filteredForests = selectedRegion === Region.ALL
+    ? FORESTS
     : FORESTS.filter(f => f.region === selectedRegion);
 
-  if (viewMode === 'gate') {
-    return (
-      <div className="h-screen w-full relative flex items-center justify-center overflow-hidden bg-stone-100">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80" 
-            alt="Blur Background" 
-            className="w-full h-full object-cover blur-md opacity-40"
-          />
-        </div>
+  // Gate view removed
 
-        <div className="relative z-10 w-full max-w-xl mx-4 bg-white rounded-[3rem] shadow-[0_30px_100px_rgba(0,0,0,0.15)] overflow-hidden animate-in fade-in zoom-in duration-1000">
-          <div className="h-80 w-full relative overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1200&q=80" 
-              alt="Featured Forest" 
-              className="w-full h-full object-cover animate-[ken-burns_30s_linear_infinite]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-            <div className="absolute top-6 left-6">
-              <span className="bg-emerald-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg">
-                National Forest Hub
-              </span>
-            </div>
-          </div>
-
-          <div className="p-10 md:p-14 text-center space-y-8">
-            <div className="space-y-3">
-              <h1 className="text-3xl md:text-4xl font-black text-stone-900 leading-tight tracking-tighter">
-                전국 국립자연휴양림<br/>통합 예약 센터
-              </h1>
-              <p className="text-stone-500 font-medium leading-relaxed text-sm md:text-base">
-                전국 100여 개 이상의 휴양림 정보를 한눈에 확인하고<br className="hidden md:block"/> 
-                숲나들e 공식 서비스를 통해 안전하게 예약하세요.
-              </p>
-            </div>
-            
-            <div className="pt-2">
-              <button 
-                onClick={enterSite}
-                className="group w-full flex items-center justify-center gap-4 bg-emerald-600 hover:bg-emerald-500 text-white py-6 rounded-2xl text-xl font-black shadow-[0_20px_40px_rgba(5,150,105,0.3)] transition-all transform hover:-translate-y-1 active:scale-95"
-              >
-                <span>지금 예약하러 가기</span>
-                <svg className="w-6 h-6 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
-            </div>
-            
-            <div className="flex justify-center gap-6 text-[10px] text-stone-400 font-bold uppercase tracking-widest pt-2">
-              <span>● 전국 170+ 지역</span>
-              <span>● 간편 결제 지원</span>
-              <span>● 숲나들e 통합</span>
-            </div>
-          </div>
-        </div>
-
-        <style>{`
-          @keyframes ken-burns {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-          }
-        `}</style>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-900 animate-in fade-in duration-1000">
       <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setViewMode('gate')}>
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <span className="text-2xl">🌲</span>
             <span className="font-black text-xl text-emerald-800 tracking-tighter">숲나들e</span>
           </div>
@@ -133,7 +66,7 @@ const App: React.FC = () => {
             <a href="#explorer" className="hover:text-emerald-700 transition-colors">휴양림 검색</a>
             <a href="#guide" className="hover:text-emerald-700 transition-colors">가이드</a>
           </div>
-          <button 
+          <button
             onClick={scrollToExplorer}
             className="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-full text-xs font-black transition-all"
           >
@@ -154,10 +87,10 @@ const App: React.FC = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {QUICK_BOOKING_LINKS.map((link, idx) => (
-                <a 
-                  key={idx} 
-                  href={link.url} 
-                  target="_blank" 
+                <a
+                  key={idx}
+                  href={link.url}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className={`flex flex-col items-center justify-center p-6 rounded-2xl border-2 ${link.color} hover:shadow-lg transition-all transform hover:-translate-y-1 text-center space-y-3 group`}
                 >
@@ -180,10 +113,10 @@ const App: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {EXPERIENCES.map((exp, idx) => (
                 <div key={idx} className="relative group overflow-hidden rounded-[2.5rem] h-80 shadow-xl border border-white">
-                  <img 
-                    src={exp.bgImage} 
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
-                    alt={exp.title} 
+                  <img
+                    src={exp.bgImage}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                    alt={exp.title}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   <div className="absolute inset-0 p-10 flex flex-col justify-end text-white space-y-4">
@@ -195,9 +128,9 @@ const App: React.FC = () => {
                       {exp.description}
                     </p>
                     <div className="pt-2">
-                      <a 
-                        href={exp.link} 
-                        target="_blank" 
+                      <a
+                        href={exp.link}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 rounded-full font-black text-sm hover:bg-emerald-500 hover:text-white transition-all shadow-xl"
                       >
@@ -218,7 +151,7 @@ const App: React.FC = () => {
             <span className="text-emerald-600 font-black text-xs tracking-widest uppercase">National Service Info</span>
             <h2 className="text-4xl md:text-5xl font-black text-stone-900 leading-[1.2]">숲에서 만나는 진정한 휴식</h2>
             <p className="max-w-3xl mx-auto text-lg text-stone-500 leading-relaxed">
-              전국 국립자연휴양림은 숲나들e 통합 예약 시스템을 통해 쉽고 편리하게 이용할 수 있습니다.<br className="hidden md:block"/>
+              전국 국립자연휴양림은 숲나들e 통합 예약 시스템을 통해 쉽고 편리하게 이용할 수 있습니다.<br className="hidden md:block" />
               숙박시설뿐만 아니라 야영장, 숲길, 체험 프로그램까지 자연이 주는 혜택을 한곳에서 만나보세요.
             </p>
             {/* 인트로 하단 중간 광고 */}
@@ -231,17 +164,16 @@ const App: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-16 space-y-6">
               <h2 className="text-3xl md:text-5xl font-black text-stone-900 tracking-tight">전국 휴양림 리스트</h2>
-              
+
               <div className="flex flex-wrap justify-center gap-2 pt-8">
                 {Object.values(Region).map((region) => (
                   <button
                     key={region}
                     onClick={() => setSelectedRegion(region)}
-                    className={`px-6 py-3 rounded-2xl text-sm font-bold transition-all ${
-                      selectedRegion === region 
-                        ? 'bg-emerald-700 text-white shadow-xl scale-105' 
-                        : 'bg-white text-stone-500 border border-stone-200 hover:border-emerald-300'
-                    }`}
+                    className={`px-6 py-3 rounded-2xl text-sm font-bold transition-all ${selectedRegion === region
+                      ? 'bg-emerald-700 text-white shadow-xl scale-105'
+                      : 'bg-white text-stone-500 border border-stone-200 hover:border-emerald-300'
+                      }`}
                   >
                     {region}
                   </button>
@@ -257,9 +189,9 @@ const App: React.FC = () => {
                   {/* 휴양림 카드 */}
                   <div className="flex flex-col bg-white rounded-[2rem] overflow-hidden shadow-sm border border-stone-100 group hover:shadow-xl transition-all duration-300">
                     <div className="h-56 relative overflow-hidden">
-                      <img 
-                        src={forest.imageUrl} 
-                        alt={forest.name} 
+                      <img
+                        src={forest.imageUrl}
+                        alt={forest.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute top-4 right-4">
@@ -267,6 +199,7 @@ const App: React.FC = () => {
                           {forest.region}
                         </span>
                       </div>
+                      {/* Ad Stamp Removed */}
                     </div>
                     <div className="p-8 flex flex-col flex-1 space-y-4">
                       <h3 className="text-xl font-black text-stone-800">{forest.name}</h3>
@@ -284,9 +217,9 @@ const App: React.FC = () => {
                             </span>
                           ))}
                         </div>
-                        <a 
-                          href={forest.bookingUrl} 
-                          target="_blank" 
+                        <a
+                          href={forest.bookingUrl}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="block w-full text-center bg-stone-900 hover:bg-emerald-700 text-white py-4 rounded-xl text-xs font-black transition-all"
                         >
@@ -297,12 +230,11 @@ const App: React.FC = () => {
                   </div>
 
                   {/* 리스트 중간 광고 삽입 (6번째 아이템마다 가로형 광고 노출) */}
+                  {/* 리스트 중간 광고 삽입 (6번째 아이템마다) */}
                   {(index + 1) % 6 === 0 && (
-                    <div className="col-span-1 md:col-span-2 lg:col-span-3 py-4">
-                      <div className="bg-white p-4 rounded-[2rem] border border-stone-100 shadow-sm">
-                        <p className="text-[10px] text-stone-300 font-bold uppercase tracking-widest mb-2 px-4 text-center">Sponsored Content</p>
-                        <AdUnit slot="7932374339" format="horizontal" />
-                      </div>
+                    <div className="adsense-container col-span-1 md:col-span-2 lg:col-span-3 w-full py-8">
+                      {/* 애드센스 코드 */}
+                      <AdUnit slot="7932374339" format="auto" className="" />
                     </div>
                   )}
                 </React.Fragment>
@@ -322,8 +254,8 @@ const App: React.FC = () => {
             <div className="bg-stone-900 rounded-[4rem] p-12 md:p-24 text-white relative overflow-hidden">
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                 <div className="space-y-6">
-                  <h2 className="text-4xl md:text-6xl font-black leading-tight">숲나들e<br/>간편 예약 가이드</h2>
-                  <p className="text-stone-400 text-lg leading-relaxed">전국의 국립자연휴양림은 통합 아이디 하나로<br/>언제 어디서나 쉽게 예약할 수 있습니다.</p>
+                  <h2 className="text-4xl md:text-6xl font-black leading-tight">숲나들e<br />간편 예약 가이드</h2>
+                  <p className="text-stone-400 text-lg leading-relaxed">전국의 국립자연휴양림은 통합 아이디 하나로<br />언제 어디서나 쉽게 예약할 수 있습니다.</p>
                   <div className="pt-8">
                     <a href="https://www.foresttrip.go.kr" target="_blank" className="inline-block bg-emerald-600 px-12 py-5 rounded-full font-black hover:bg-emerald-500 transition-all shadow-xl">공식 홈페이지 방문</a>
                   </div>
@@ -370,7 +302,10 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="mt-16 pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between gap-4 text-[10px] text-stone-400 font-bold uppercase tracking-widest">
-            <p>© 2025 National Forest Information Portal. All Rights Reserved.</p>
+            <div className="flex flex-col gap-1">
+              <p>© 2025 National Forest Information Portal. All Rights Reserved.</p>
+              <p className="normal-case tracking-normal">범키드 | 대표: 김낙원 | 사업자등록번호: 770-51-00533</p>
+            </div>
             <p>Better rest, Better life with Foresttrip.</p>
           </div>
         </div>

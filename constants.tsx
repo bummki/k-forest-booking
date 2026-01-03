@@ -27,7 +27,7 @@ export const EXPERIENCES: ExperienceSection[] = [
     description: '도전과 힐링! 자연에서 즐기는 색다른 체험을 즐겨보세요.',
     link: 'https://www.foresttrip.go.kr/mnfrsLeportsMain.do',
     icon: '🚵',
-    bgImage: 'https://images.unsplash.com/photo-1521330784833-ad58f0d9f893?auto=format&fit=crop&w=800&q=80'
+    bgImage: 'https://onnuriinfo.com/wp-content/uploads/2025/12/Cypress-Trunks-Perspective.png'
   }
 ];
 
@@ -98,6 +98,7 @@ export const FORESTS: Forest[] = rawList.map((f, index) => {
     description: `${address}. ${f.phone || ''}. ${f.closed ? `휴무: ${f.closed}.` : ''}`,
     tags: tags,
     imageUrl: `https://picsum.photos/seed/${encodeURIComponent(name)}/600/400`,
-    bookingUrl: f.url || 'https://www.foresttrip.go.kr/'
+    bookingUrl: f.url || 'https://www.foresttrip.go.kr/',
+    isAd: !!f.isAd
   };
 });
