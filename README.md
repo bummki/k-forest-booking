@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🌲 k-forest-booking (국립자연휴양림 통합 예약 랜딩)
 
-# Run and deploy your AI Studio app
+전국 170여 개 국립자연휴양림의 정보를 한눈에 확인하고 예약 페이지로 쉽게 이동할 수 있는 랜딩 페이지입니다.
 
-This contains everything you need to run your app locally.
+## ✨ 주요 기능
 
-View your app in AI Studio: https://ai.studio/apps/drive/1PZVinslad9qqnH_c0cvd7pPvrmRdeENm
+- **전국 휴양림 목록 조회**: 전국 국립자연휴양림의 이름, 주소, 전화번호, 휴무일 정보를 카드 형태로 제공합니다.
+- **실시간 검색**: 휴양림 이름 또는 주소(지역명)로 즉시 검색할 수 있습니다.
+- **지역별 필터링**: 강원, 경기/수도권, 충청, 전라, 경상, 제주 등 주요 권역별로 휴양림을 모아볼 수 있습니다.
+- **반응형 디자인**: PC와 모바일 환경 모두에 최적화된 UI를 제공합니다.
 
-## Run Locally
+## 🛠 사용 기술
 
-**Prerequisites:**  Node.js
+- **HTML5 / JavaScript (Vanilla)**: 별도의 빌드 과정 없이 가볍게 동작하도록 구성되었습니다.
+- **Tailwind CSS**: 유틸리티 클래스를 사용하여 빠르고 일관된 디자인을 적용했습니다.
 
+## 🚀 실행 방법
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+이 프로젝트는 정적 웹사이트이므로 별도의 설치 과정 없이 바로 실행할 수 있습니다.
+
+1. 저장소를 클론합니다.
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/k-forest-booking.git
+   ```
+2. `index.html` 파일을 브라우저에서 엽니다.
+   - 또는 VS Code의 'Live Server' 확장을 사용하면 더 원활하게 확인할 수 있습니다.
+
+---
+*이 프로젝트는 숲나들e의 데이터를 기반으로 제작되었습니다.*
