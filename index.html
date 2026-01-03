@@ -1,47 +1,288 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>숲나들e - 국립자연휴양림 예약</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
-    rel="stylesheet">
-  <!-- 구글 애드센스 전역 스크립트 (자동 전면 광고 방지 설정) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" crossorigin="anonymous"></script>
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({
-      google_ad_client: "ca-pub-2695727848475573",
-      enable_page_level_ads: true,
-      overlays: { bottom: true } // 전면광고(vignette)를 방해하지 않는 하단 오버레이 등만 허용하거나 설정을 조정할 수 있음
-    });
-  </script>
-  <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      scroll-behavior: smooth;
-    }
+  <meta name="description" content="숲나들e를 통한 전국 국립자연휴양림 통합 예약 가이드. 강원, 경기, 충청, 전라, 경상, 제주 등 지역별 휴양림 정보와 숲속의 집, 야영장 예약 바로가기를 제공합니다.">
+  <meta name="keywords" content="숲나들e, 국립자연휴양림, 자연휴양림 예약, 숲속의 집, 야영장, 캠핑장, 산림청, 휴양림 추천, 힐링 여행, 숲길">
+  <meta name="robots" content="index, follow">
 
-    .ads-container {
-      min-height: 100px;
-      background: #f9f9f9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 2rem 0;
-      border-radius: 1rem;
-      overflow: hidden;
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="숲나들e - 국립자연휴양림 통합 예약 및 전국 안내">
+  <meta property="og:description" content="전국 국립자연휴양림 정보를 한눈에! 지역별 검색과 숲나들e 예약 바로가기 기능을 제공합니다.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=80">
+
+  <title>숲나들e - 국립자연휴양림 통합 예약 및 전국 안내</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google AdSense 스크립트 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2695727848475573" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    #to-top-btn {
+      display: none;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: #166534; /* bg-green-800 */
+      color: white;
+      border: none;
+      border-radius: 9999px; /* rounded-full */
+      padding: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    #to-top-btn:hover {
+      background-color: #15803d; /* bg-green-700 */
+      transform: scale(1.1);
     }
   </style>
-  <link rel="stylesheet" href="/index.css">
 </head>
-
 <body class="bg-stone-50 text-stone-900">
-  <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
 
+  <!-- 휴양림 리스트 섹션 -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-extrabold text-stone-900 sm:text-4xl">
+        전국 국립자연휴양림 안내
+      </h2>
+      <p class="mt-4 text-lg text-stone-600">
+        원하는 휴양림을 검색하고 예약 페이지로 이동하세요.
+      </p>
+      <div class="mt-6 max-w-xl mx-auto">
+        <div class="relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-stone-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input type="text" id="forest-search" class="focus:ring-green-500 focus:border-green-500 block w-full pl-10 sm:text-sm border-stone-300 rounded-md py-3" placeholder="휴양림 이름, 지역(강원, 경기 등) 검색">
+        </div>
+      </div>
+    </div>
+
+    <!-- 지역별 필터 버튼 -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8" id="region-filters">
+      <button data-region="all" class="px-4 py-2 rounded-full border border-stone-300 bg-green-600 text-white hover:bg-green-700 transition-colors font-medium">전체</button>
+      <button data-region="gangwon" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-colors font-medium">강원</button>
+      <button data-region="capital" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-colors font-medium">경기/수도권</button>
+      <button data-region="chungcheong" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-colors font-medium">충청/대전</button>
+      <button data-region="jeolla" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-colors font-medium">전라/광주</button>
+      <button data-region="gyeongsang" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-colors font-medium">경상/대구/부산</button>
+      <button data-region="jeju" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-colors font-medium">제주</button>
+    </div>
+
+    <!-- Experience & Leports Section -->
+    <section id="experience" class="py-16 bg-stone-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-10">
+          <h2 class="text-2xl md:text-3xl font-black text-stone-900">도전과 힐링, 숲길 레포츠</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="relative group overflow-hidden rounded-2xl h-80 shadow-lg">
+            <img 
+              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80" 
+              class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+              alt="아름다운 숲길" 
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end text-white space-y-3">
+              <h3 class="text-3xl font-black">🥾 아름다운 숲길</h3>
+              <p class="text-stone-200 font-medium">자연과 사람이 함께하는 숲길을 느껴보세요.</p>
+              <div class="pt-2">
+                <a href="https://www.foresttrip.go.kr/frtrlMain.do" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-white text-stone-900 px-5 py-2.5 rounded-full font-bold text-sm hover:bg-green-100 transition-colors">자세히 보기</a>
+              </div>
+            </div>
+          </div>
+          <div class="relative group overflow-hidden rounded-2xl h-80 shadow-lg">
+            <img 
+              src="https://images.unsplash.com/photo-1533561052669-d241e634e85c?auto=format&fit=crop&w=800&q=80" 
+              class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+              alt="산림 레포츠" 
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end text-white space-y-3">
+              <h3 class="text-3xl font-black">🚵 산림 레포츠</h3>
+              <p class="text-stone-200 font-medium">도전과 힐링! 자연에서 즐기는 색다른 체험을 즐겨보세요.</p>
+              <div class="pt-2">
+                <a href="https://www.foresttrip.go.kr/mnfrsLeportsMain.do" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-white text-stone-900 px-5 py-2.5 rounded-full font-bold text-sm hover:bg-green-100 transition-colors">자세히 보기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-4 my-12 text-center">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2695727848475573"
+             data-ad-slot="7932374339"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <div id="forest-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <!-- 자바스크립트로 카드가 여기에 생성됩니다 -->
+    </div>
+    
+    <div id="no-results" class="hidden text-center py-12">
+      <p class="text-stone-500 text-lg">검색 결과가 없습니다.</p>
+    </div>
+  </div>
+
+  <button id="to-top-btn" title="맨 위로 이동">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+    </svg>
+  </button>
+
+  <script src="forest_data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('forest-grid');
+      const searchInput = document.getElementById('forest-search');
+      const regionFilters = document.getElementById('region-filters');
+      const noResults = document.getElementById('no-results');
+      let currentRegion = 'all';
+      const toTopBtn = document.getElementById('to-top-btn');
+
+      // 광고 노드 생성 함수 (Next.js의 GoogleAd 컴포넌트 역할)
+      function createAdNode() {
+        const container = document.createElement('div');
+        // 리스트 내 카드와 유사한 스타일 적용, 배경색만 약간 다르게 구분
+        container.className = 'bg-stone-100 overflow-hidden shadow rounded-lg flex items-center justify-center p-4';
+        
+        const ins = document.createElement('ins');
+        ins.className = 'adsbygoogle';
+        ins.style.display = 'block';
+        ins.style.width = '100%';
+        ins.setAttribute('data-ad-client', 'ca-pub-2695727848475573');
+        ins.setAttribute('data-ad-slot', '7932374339');
+        ins.setAttribute('data-ad-format', 'auto');
+        ins.setAttribute('data-full-width-responsive', 'true');
+        
+        container.appendChild(ins);
+        return container;
+      }
+
+      function renderForests(forests) {
+        grid.innerHTML = '';
+        if (forests.length === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          // 가나다순으로 정렬
+          forests.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+
+          noResults.classList.add('hidden');
+          forests.forEach((forest, index) => {
+            const card = document.createElement('div');
+            card.className = 'bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow duration-300 flex flex-col';
+            card.innerHTML = `
+              <div class="px-4 py-5 sm:p-6 flex-1">
+                <h3 class="text-lg leading-6 font-medium text-stone-900 mb-2">${forest.name}</h3>
+                <p class="text-sm text-stone-500 mb-1"><span class="font-semibold">주소:</span> ${forest.address || '정보 없음'}</p>
+                <p class="text-sm text-stone-500 mb-1"><span class="font-semibold">전화:</span> ${forest.phone || '정보 없음'}</p>
+                ${forest.closed ? `<p class="text-sm text-red-500 mb-1"><span class="font-semibold">휴무:</span> ${forest.closed}</p>` : ''}
+              </div>
+              <div class="bg-stone-50 px-4 py-4 sm:px-6">
+                <a href="${forest.url}" target="_blank" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                  예약하기
+                </a>
+              </div>
+            `;
+            grid.appendChild(card);
+
+            // 2번째 카드 뒤에 광고 삽입 (인덱스 1일 때)
+            if (index === 1) {
+              const adNode = createAdNode();
+              grid.appendChild(adNode);
+              // 동적 광고 푸시
+              try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+              } catch (e) {
+                console.error("AdSense error:", e);
+              }
+            }
+          });
+        }
+      }
+
+      function filterData() {
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        const filtered = forestData.filter(forest => {
+          // 1. 검색어 필터
+          const matchesSearch = forest.name.toLowerCase().includes(searchTerm) || 
+                                forest.address.toLowerCase().includes(searchTerm);
+          
+          // 2. 지역 필터
+          let matchesRegion = true;
+          const addr = forest.address;
+          
+          if (currentRegion === 'gangwon') matchesRegion = addr.includes('강원');
+          else if (currentRegion === 'capital') matchesRegion = addr.includes('경기') || addr.includes('서울') || addr.includes('인천');
+          else if (currentRegion === 'chungcheong') matchesRegion = addr.includes('충남') || addr.includes('충북') || addr.includes('대전') || addr.includes('세종');
+          else if (currentRegion === 'jeolla') matchesRegion = addr.includes('전남') || addr.includes('전북') || addr.includes('광주');
+          else if (currentRegion === 'gyeongsang') matchesRegion = addr.includes('경남') || addr.includes('경북') || addr.includes('부산') || addr.includes('대구') || addr.includes('울산');
+          else if (currentRegion === 'jeju') matchesRegion = addr.includes('제주');
+
+          return matchesSearch && matchesRegion;
+        });
+
+        renderForests(filtered);
+      }
+
+      // 초기 렌더링
+      if (typeof forestData !== 'undefined') {
+        renderForests(forestData);
+
+        // 이벤트 리스너 등록
+        searchInput.addEventListener('input', filterData);
+
+        regionFilters.addEventListener('click', (e) => {
+          if (e.target.tagName === 'BUTTON') {
+            // 버튼 스타일 초기화 및 활성화
+            const buttons = regionFilters.querySelectorAll('button');
+            buttons.forEach(btn => {
+              btn.className = 'px-4 py-2 rounded-full border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-colors font-medium';
+            });
+            e.target.className = 'px-4 py-2 rounded-full border border-stone-300 bg-green-600 text-white hover:bg-green-700 transition-colors font-medium';
+            
+            // 필터 적용
+            currentRegion = e.target.dataset.region;
+            filterData();
+          }
+        });
+      } else {
+        console.error('forest_data.js를 찾을 수 없습니다.');
+        grid.innerHTML = '<p class="text-center text-red-500 col-span-full">데이터를 불러오는데 실패했습니다.</p>';
+      }
+
+      // 스크롤 이벤트 처리
+      window.onscroll = function() {
+        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+          toTopBtn.style.display = "block";
+        } else {
+          toTopBtn.style.display = "none";
+        }
+      };
+
+      // Top 버튼 클릭 이벤트
+      toTopBtn.addEventListener('click', () => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      });
+
+      // 애드센스 광고 초기화
+      try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error("AdSense error:", e);
+      }
+
+    });
+  </script>
+
+</body>
 </html>
