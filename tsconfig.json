@@ -22,17 +22,15 @@
     },
     "include": [
         "src",
-        "./*.ts",
-        "./*.tsx",
-        "./*.js"
+        "App.tsx",
+        "constants.tsx",
+        "index.tsx",
+        "types.ts",
+        "forest_data.js",
+        "map_data.js"
     ],
     "exclude": [
         "node_modules",
         "vite.config.ts"
-    ],
-    "references": [
-        {
-            "path": "./tsconfig.node.json"
-        }
     ]
 }
