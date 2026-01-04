@@ -303,7 +303,7 @@ const App: React.FC = () => {
           </div>
           <div className="mt-16 pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between gap-4 text-[10px] text-stone-400 font-bold uppercase tracking-widest">
             <div className="flex flex-col gap-1">
-              <p>© 2025 National Forest Information Portal. All Rights Reserved.</p>
+              <p>© 2026 National Forest Information Portal. All Rights Reserved.</p>
               <p className="normal-case tracking-normal">범키드 | 대표: 김낙원 | 사업자등록번호: 770-51-00533</p>
             </div>
             <p>Better rest, Better life with Foresttrip.</p>
