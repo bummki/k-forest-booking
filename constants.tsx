@@ -80,7 +80,8 @@ const getLocationFromAddress = (address: string): string => {
 // forestDataRaw가 배열인지 확인하고, 아닐 경우 빈 배열로 처리하여 초기화 오류 방지
 const rawList = Array.isArray(forestDataRaw) ? forestDataRaw : [];
 
-export const FORESTS: Forest[] = rawList.map((f, index) => {
+export const FORESTS: Forest[] = rawList.map((item, index) => {
+  const f = item as any; // Cast to any to handle potentially missing properties from raw JS data
   const address = f.address || '';
   const name = f.name || `휴양림 ${index}`;
   const region = getRegionFromAddress(address);
