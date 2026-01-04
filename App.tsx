@@ -75,7 +75,7 @@ const App: React.FC = () => {
         </div>
       </nav>
 
-      <main>
+      <main className="flex-1">
         {/* Quick Booking Links Section */}
         <section id="quick-booking" className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4">
@@ -301,12 +301,14 @@ const App: React.FC = () => {
               <a href="https://www.foresttrip.go.kr" className="hover:text-emerald-600 border-b-2 border-emerald-500">공식사이트</a>
             </div>
           </div>
-          <div className="mt-16 pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between gap-4 text-[10px] text-stone-400 font-bold uppercase tracking-widest">
-            <div className="flex flex-col gap-1">
-              <p>© 2026 National Forest Information Portal. All Rights Reserved.</p>
-              <p className="normal-case tracking-normal">범키드 | 대표: 김낙원 | 사업자등록번호: 770-51-00533</p>
+          <div className="mt-16 pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between gap-6 text-xs text-stone-500 font-medium">
+            <div className="flex flex-col gap-2">
+              <p className="font-bold text-stone-900 text-sm">© 2026 National Forest Information Portal. All Rights Reserved.</p>
+              <p className="tracking-tight">
+                범키드 <span className="text-stone-300 mx-2">|</span> 대표: 김낙원 <span className="text-stone-300 mx-2">|</span> 사업자등록번호: 770-51-00533
+              </p>
             </div>
-            <p>Better rest, Better life with Foresttrip.</p>
+            <p className="md:self-end text-[10px] uppercase font-black tracking-widest text-stone-300">Better rest, Better life with Foresttrip.</p>
           </div>
         </div>
       </footer>
