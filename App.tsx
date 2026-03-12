@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Region } from './types';
+import { Region, Theme } from './types';
 import { FORESTS, RESERVATION_STEPS, QUICK_BOOKING_LINKS, EXPERIENCES } from './constants';
 
 declare global {
@@ -37,6 +37,8 @@ const AdUnit: React.FC<{ slot: string; format?: string; className?: string }> = 
 const App: React.FC = () => {
   // const [viewMode, setViewMode] = useState<'gate' | 'content'>('gate'); // Removed for direct access
   const [selectedRegion, setSelectedRegion] = useState<Region>(Region.ALL);
+  const [selectedTheme, setSelectedTheme] = useState<Theme>(Theme.ALL);
+  const [searchQuery, setSearchQuery] = useState('');
   const explorerRef = useRef<HTMLElement>(null);
 
   // enterSite removed
@@ -45,9 +47,14 @@ const App: React.FC = () => {
     explorerRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const filteredForests = selectedRegion === Region.ALL
-    ? FORESTS
-    : FORESTS.filter(f => f.region === selectedRegion);
+  const filteredForests = FORESTS.filter(f => {
+    const matchesRegion = selectedRegion === Region.ALL || f.region === selectedRegion;
+    const matchesTheme = selectedTheme === Theme.ALL || f.theme === selectedTheme;
+    const matchesSearch = searchQuery === '' || 
+      f.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      f.location.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesRegion && matchesTheme && matchesSearch;
+  });
 
   // Gate view removed
 
@@ -165,17 +172,55 @@ const App: React.FC = () => {
             <div className="text-center mb-16 space-y-6">
               <h2 className="text-3xl md:text-5xl font-black text-stone-900 tracking-tight">전국 휴양림 리스트</h2>
 
-              <div className="flex flex-wrap justify-center gap-2 pt-8">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4 pb-8 max-w-2xl mx-auto">
+                <div className="relative w-full">
+                  <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                    <svg className="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="휴양림 이름이나 지역을 검색해보세요"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-10 py-3.5 bg-white border-2 border-stone-200 rounded-2xl text-stone-700 font-medium placeholder-stone-400 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute inset-y-0 right-4 flex items-center text-stone-400 hover:text-stone-600 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {Object.values(Region).map((region) => (
                   <button
                     key={region}
                     onClick={() => setSelectedRegion(region)}
-                    className={`px-6 py-3 rounded-2xl text-sm font-bold transition-all ${selectedRegion === region
-                      ? 'bg-emerald-700 text-white shadow-xl scale-105'
+                    className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${selectedRegion === region
+                      ? 'bg-emerald-700 text-white shadow-md'
                       : 'bg-white text-stone-500 border border-stone-200 hover:border-emerald-300'
                       }`}
                   >
                     {region}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-2">
+                {Object.values(Theme).map((theme) => (
+                  <button
+                    key={theme}
+                    onClick={() => setSelectedTheme(theme)}
+                    className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${selectedTheme === theme
+                      ? 'bg-stone-800 text-white shadow-md'
+                      : 'bg-white text-stone-500 border border-stone-200 hover:border-stone-400'
+                      }`}
+                  >
+                    {theme}
                   </button>
                 ))}
               </div>

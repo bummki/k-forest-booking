@@ -1,5 +1,5 @@
 
-import { Region, Forest, ReservationStep, QuickLink, ExperienceSection } from './types';
+import { Region, Theme, Forest, ReservationStep, QuickLink, ExperienceSection } from './types';
 
 // forest_data.js의 원시 데이터를 기반으로 한 FOREST_RAW_DATA 정의를 상단에 배치하거나 
 // 실제 프로젝트 환경에 따라 별도 파일에서 가져오는 것이 좋으나, 
@@ -77,6 +77,15 @@ const getLocationFromAddress = (address: string): string => {
   return address;
 };
 
+const getThemeFromNameAndAddress = (name: string, address: string): Theme => {
+  const n = name || '';
+  const a = address || '';
+  if (n.includes('신시도') || n.includes('안면도') || n.includes('석모도') || n.includes('섬') || n.includes('해안') || n.includes('바다') || a.match(/변산|진도|완도|보령/)) return Theme.OCEAN;
+  if (n.includes('계곡') || n.includes('청평') || n.includes('소선암') || n.includes('호반') || n.includes('수변')) return Theme.VALLEY;
+  if (n.includes('수락산') || n.includes('용인') || a.match(/서울|부산|도심|도시/)) return Theme.CITY;
+  return Theme.MOUNTAIN;
+};
+
 // forestDataRaw가 배열인지 확인하고, 아닐 경우 빈 배열로 처리하여 초기화 오류 방지
 const rawList = Array.isArray(forestDataRaw) ? forestDataRaw : [];
 
@@ -85,16 +94,19 @@ export const FORESTS: Forest[] = rawList.map((item, index) => {
   const address = f.address || '';
   const name = f.name || `휴양림 ${index}`;
   const region = getRegionFromAddress(address);
+  const theme = getThemeFromNameAndAddress(name, address);
   const location = getLocationFromAddress(address);
   const tags = [
     `#${location.split(' ')[1] || location}`,
-    f.closed ? `#${f.closed}` : '#예약가능'
-  ];
+    f.closed ? `#${f.closed}` : '#예약가능',
+    theme !== Theme.ALL ? `#${theme}` : ''
+  ].filter(Boolean);
 
   return {
     id: f.id || `forest_${index}`,
     name: name,
     region: region,
+    theme: theme,
     location: location,
     description: `${address}. ${f.phone || ''}. ${f.closed ? `휴무: ${f.closed}.` : ''}`,
     tags: tags,

@@ -9,10 +9,18 @@ export enum Region {
   JEJU = '제주'
 }
 
+export enum Theme {
+  ALL = '모든 테마',
+  MOUNTAIN = '깊은숲·산',
+  OCEAN = '바다·섬',
+  VALLEY = '계곡·수변',
+  CITY = '도심인근'
+}
 export interface Forest {
   id: string;
   name: string;
   region: Region;
+  theme: Theme;
   location: string;
   description: string;
   tags: string[];
