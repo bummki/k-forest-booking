@@ -20,15 +20,30 @@ export const EXPERIENCES: ExperienceSection[] = [
     description: '자연과 사람이 함께하는 숲길을 느껴보세요.',
     link: 'https://www.foresttrip.go.kr/frtrlMain.do',
     icon: '🥾',
-    bgImage: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80'
+    bgImage: '/images/forest-05.png'
   },
   {
     title: '산림 레포츠',
     description: '도전과 힐링! 자연에서 즐기는 색다른 체험을 즐겨보세요.',
     link: 'https://www.foresttrip.go.kr/mnfrsLeportsMain.do',
     icon: '🚵',
-    bgImage: 'https://onnuriinfo.com/wp-content/uploads/2025/12/Cypress-Trunks-Perspective.png'
+    bgImage: '/images/forest-10.png'
   }
+];
+
+const FOREST_IMAGES = [
+  '/images/forest-01.png',
+  '/images/forest-02.png',
+  '/images/forest-03.png',
+  '/images/forest-04.png',
+  '/images/forest-05.png',
+  '/images/forest-06.png',
+  '/images/forest-07.png',
+  '/images/forest-08.png',
+  '/images/forest-09.png',
+  '/images/forest-10.png',
+  '/images/forest-11.png',
+  '/images/forest-12.png'
 ];
 
 export const RESERVATION_STEPS: ReservationStep[] = [
@@ -110,7 +125,7 @@ export const FORESTS: Forest[] = rawList.map((item, index) => {
     location: location,
     description: `${address}. ${f.phone || ''}. ${f.closed ? `휴무: ${f.closed}.` : ''}`,
     tags: tags,
-    imageUrl: `https://picsum.photos/seed/${encodeURIComponent(name)}/600/400`,
+    imageUrl: FOREST_IMAGES[index % FOREST_IMAGES.length],
     bookingUrl: f.url || 'https://www.foresttrip.go.kr/',
     isAd: !!f.isAd
   };

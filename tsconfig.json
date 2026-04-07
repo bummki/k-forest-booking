@@ -25,6 +25,7 @@
         "App.tsx",
         "constants.tsx",
         "index.tsx",
+        "posts.ts",
         "types.ts",
         "forest_data.js",
         "map_data.js"

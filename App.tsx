@@ -1,7 +1,8 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Region, Theme } from './types';
 import { FORESTS, RESERVATION_STEPS, QUICK_BOOKING_LINKS, EXPERIENCES } from './constants';
+import { POSTS } from './posts';
 
 declare global {
   interface Window {
@@ -39,6 +40,9 @@ const App: React.FC = () => {
   const [selectedRegion, setSelectedRegion] = useState<Region>(Region.ALL);
   const [selectedTheme, setSelectedTheme] = useState<Theme>(Theme.ALL);
   const [searchQuery, setSearchQuery] = useState('');
+  const [postRegion, setPostRegion] = useState<Region>(Region.ALL);
+  const [postTheme, setPostTheme] = useState<Theme>(Theme.ALL);
+  const [postsVisible, setPostsVisible] = useState(24);
   const explorerRef = useRef<HTMLElement>(null);
 
   // enterSite removed
@@ -58,6 +62,34 @@ const App: React.FC = () => {
 
   // Gate view removed
 
+  const postsWithMeta = useMemo(() => {
+    const normalize = (value: string) =>
+      value.replace(/\s+/g, '').replace(/[·\-–—]/g, '').trim();
+    const forestMap = new Map<string, (typeof FORESTS)[number]>();
+    FORESTS.forEach((forest) => {
+      forestMap.set(normalize(forest.name), forest);
+    });
+    return POSTS.map((post) => {
+      const forest = forestMap.get(normalize(post.title));
+      return {
+        ...post,
+        region: forest?.region ?? Region.ALL,
+        theme: forest?.theme ?? Theme.ALL,
+        location: forest?.location ?? '전국'
+      };
+    });
+  }, []);
+
+  const filteredPosts = postsWithMeta.filter((post) => {
+    const matchesRegion = postRegion === Region.ALL || post.region === postRegion;
+    const matchesTheme = postTheme === Theme.ALL || post.theme === postTheme;
+    return matchesRegion && matchesTheme;
+  });
+
+  useEffect(() => {
+    setPostsVisible(24);
+  }, [postRegion, postTheme]);
+
 
   return (
     <div className="min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-900 animate-in fade-in duration-1000">
@@ -70,6 +102,7 @@ const App: React.FC = () => {
           <div className="hidden md:flex gap-8 text-sm font-medium text-stone-600">
             <a href="#quick-booking" className="hover:text-emerald-700 transition-colors">간편예약</a>
             <a href="#experience" className="hover:text-emerald-700 transition-colors">체험/레포츠</a>
+            <a href="#posts" className="hover:text-emerald-700 transition-colors">포스팅</a>
             <a href="#explorer" className="hover:text-emerald-700 transition-colors">휴양림 검색</a>
             <a href="#guide" className="hover:text-emerald-700 transition-colors">가이드</a>
           </div>
@@ -163,6 +196,84 @@ const App: React.FC = () => {
             </p>
             {/* 인트로 하단 중간 광고 */}
             <AdUnit slot="7932374339" />
+          </div>
+        </section>
+
+        {/* Posts Section */}
+        <section id="posts" className="py-20 bg-white border-t border-stone-100">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12 space-y-3">
+              <h2 className="text-3xl md:text-4xl font-black text-stone-900">휴양림 포스팅 모음</h2>
+              <p className="text-stone-500 text-sm">총 {POSTS.length}건의 포스팅을 지역과 테마로 분류해 확인할 수 있어요. (새 탭에서 열림)</p>
+              <AdUnit slot="7932374339" format="horizontal" className="mt-4" />
+            </div>
+
+            <div className="mb-8 space-y-4">
+              <div className="flex flex-wrap justify-center gap-2">
+                {Object.values(Region).map((region) => (
+                  <button
+                    key={region}
+                    onClick={() => setPostRegion(region)}
+                    className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${postRegion === region
+                      ? 'bg-emerald-700 text-white shadow-md'
+                      : 'bg-white text-stone-500 border border-stone-200 hover:border-emerald-300'
+                      }`}
+                  >
+                    {region}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap justify-center gap-2">
+                {Object.values(Theme).map((theme) => (
+                  <button
+                    key={theme}
+                    onClick={() => setPostTheme(theme)}
+                    className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${postTheme === theme
+                      ? 'bg-stone-800 text-white shadow-md'
+                      : 'bg-white text-stone-500 border border-stone-200 hover:border-stone-400'
+                      }`}
+                  >
+                    {theme}
+                  </button>
+                ))}
+              </div>
+              <div className="text-center text-xs text-stone-500">
+                현재 {filteredPosts.length}건 표시됨
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPosts.slice(0, postsVisible).map((post, idx) => (
+                <a
+                  key={post.href}
+                  href={encodeURI(post.href)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group rounded-3xl border border-stone-200 bg-white p-6 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1"
+                >
+                  <div className="text-emerald-700 text-xs font-black tracking-widest">POST {String(idx + 1).padStart(3, '0')}</div>
+                  <h3 className="mt-3 text-lg font-black text-stone-900 group-hover:text-emerald-700 transition-colors">
+                    {post.title}
+                  </h3>
+                  <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                    <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold">{post.region}</span>
+                    <span className="px-2 py-1 rounded-full bg-stone-100 text-stone-600 font-bold">{post.theme}</span>
+                    <span className="px-2 py-1 rounded-full bg-stone-50 text-stone-500 font-medium">{post.location}</span>
+                  </div>
+                  <p className="mt-3 text-sm text-stone-500">자세한 소개와 이용 팁을 확인해 보세요.</p>
+                </a>
+              ))}
+            </div>
+            {postsVisible < filteredPosts.length && (
+              <div className="text-center mt-10">
+                <button
+                  onClick={() => setPostsVisible((count) => count + 24)}
+                  className="px-6 py-3 rounded-full bg-emerald-700 text-white text-sm font-black hover:bg-emerald-800 transition-colors"
+                >
+                  더보기
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
