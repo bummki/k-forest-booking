@@ -24,9 +24,11 @@
         "src",
         "App.tsx",
         "constants.tsx",
+        "forestApi.ts",
         "index.tsx",
         "posts.ts",
         "types.ts",
+        "vite-env.d.ts",
         "forest_data.js",
         "map_data.js"
     ],

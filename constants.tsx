@@ -1,9 +1,40 @@
-
 import { Region, Theme, Forest, ReservationStep, QuickLink, ExperienceSection } from './types';
+import forestDataRaw from './forest_data.js';
 
-// forest_data.js의 원시 데이터를 기반으로 한 FOREST_RAW_DATA 정의를 상단에 배치하거나 
-// 실제 프로젝트 환경에 따라 별도 파일에서 가져오는 것이 좋으나, 
-// 여기서는 직접 매핑 로직을 구현합니다.
+type ForestSource = Record<string, unknown>;
+
+const FALLBACK_BOOKING_URL = 'https://www.foresttrip.go.kr/';
+
+const FOREST_IMAGES = [
+  '/images/forest-01.png',
+  '/images/forest-02.png',
+  '/images/forest-03.png',
+  '/images/forest-04.png',
+  '/images/forest-05.png',
+  '/images/forest-06.png',
+  '/images/forest-07.png',
+  '/images/forest-08.png',
+  '/images/forest-09.png',
+  '/images/forest-10.png',
+  '/images/forest-11.png',
+  '/images/forest-12.png'
+];
+
+const firstString = (source: ForestSource, keys: string[]): string => {
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === 'string' && value.trim() !== '') {
+      return value.trim();
+    }
+  }
+  return '';
+};
+
+const sanitizeUrl = (url: string): string => {
+  if (!url) return FALLBACK_BOOKING_URL;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return FALLBACK_BOOKING_URL;
+};
 
 export const QUICK_BOOKING_LINKS: QuickLink[] = [
   { title: '월별예약', url: 'https://www.foresttrip.go.kr/rep/or/sssn/monthRsrvtSmplStatus.do', icon: '🗓️', color: 'bg-blue-50 text-blue-700 border-blue-100' },
@@ -31,21 +62,6 @@ export const EXPERIENCES: ExperienceSection[] = [
   }
 ];
 
-const FOREST_IMAGES = [
-  '/images/forest-01.png',
-  '/images/forest-02.png',
-  '/images/forest-03.png',
-  '/images/forest-04.png',
-  '/images/forest-05.png',
-  '/images/forest-06.png',
-  '/images/forest-07.png',
-  '/images/forest-08.png',
-  '/images/forest-09.png',
-  '/images/forest-10.png',
-  '/images/forest-11.png',
-  '/images/forest-12.png'
-];
-
 export const RESERVATION_STEPS: ReservationStep[] = [
   {
     step: 1,
@@ -67,12 +83,7 @@ export const RESERVATION_STEPS: ReservationStep[] = [
   }
 ];
 
-// forest_data.js의 데이터를 직접 삽입하거나 가져오는 로직이 필요합니다.
-// 여기서는 forest_data.js의 내용을 기반으로 FORESTS 상수를 생성합니다.
-
-import forestDataRaw from './forest_data.js';
-
-const getRegionFromAddress = (address: string): Region => {
+export const getRegionFromAddress = (address: string): Region => {
   if (!address) return Region.GYEONGSANG;
   if (address.includes('경기') || address.includes('인천') || address.includes('서울')) return Region.GYEONGGI;
   if (address.includes('강원')) return Region.GANGWON;
@@ -80,10 +91,10 @@ const getRegionFromAddress = (address: string): Region => {
   if (address.includes('전남') || address.includes('전북') || address.includes('광주')) return Region.JEOLLA;
   if (address.includes('경남') || address.includes('경북') || address.includes('부산') || address.includes('대구') || address.includes('울산')) return Region.GYEONGSANG;
   if (address.includes('제주')) return Region.JEJU;
-  return Region.GYEONGSANG; // 기본값
+  return Region.GYEONGSANG;
 };
 
-const getLocationFromAddress = (address: string): string => {
+export const getLocationFromAddress = (address: string): string => {
   if (!address) return '전국';
   const parts = address.split(' ');
   if (parts.length >= 2) {
@@ -92,7 +103,7 @@ const getLocationFromAddress = (address: string): string => {
   return address;
 };
 
-const getThemeFromNameAndAddress = (name: string, address: string): Theme => {
+export const getThemeFromNameAndAddress = (name: string, address: string): Theme => {
   const n = name || '';
   const a = address || '';
   if (n.includes('신시도') || n.includes('안면도') || n.includes('석모도') || n.includes('섬') || n.includes('해안') || n.includes('바다') || a.match(/변산|진도|완도|보령/)) return Theme.OCEAN;
@@ -101,32 +112,51 @@ const getThemeFromNameAndAddress = (name: string, address: string): Theme => {
   return Theme.MOUNTAIN;
 };
 
-// forestDataRaw가 배열인지 확인하고, 아닐 경우 빈 배열로 처리하여 초기화 오류 방지
-const rawList = Array.isArray(forestDataRaw) ? forestDataRaw : [];
+export const mapForestSourceToForest = (item: ForestSource, index: number): Forest => {
+  const address = firstString(item, ['address', 'rdnmadr']);
+  const name = firstString(item, ['name', 'rcrfrstNm']) || `휴양림 ${index + 1}`;
+  const phone = firstString(item, ['phone', 'telephoneNumber']);
+  const closed = firstString(item, ['closed']);
+  const homepage = firstString(item, ['url', 'homepageUrl']);
+  const institution = firstString(item, ['institutionNm']);
+  const mainFacility = firstString(item, ['mainFcltyNm']);
+  const stayYn = firstString(item, ['stayngPosblYn']);
+  const id = firstString(item, ['id']) || `forest_${index}`;
 
-export const FORESTS: Forest[] = rawList.map((item, index) => {
-  const f = item as any; // Cast to any to handle potentially missing properties from raw JS data
-  const address = f.address || '';
-  const name = f.name || `휴양림 ${index}`;
   const region = getRegionFromAddress(address);
   const theme = getThemeFromNameAndAddress(name, address);
   const location = getLocationFromAddress(address);
-  const tags = [
-    `#${location.split(' ')[1] || location}`,
-    f.closed ? `#${f.closed}` : '#예약가능',
-    theme !== Theme.ALL ? `#${theme}` : ''
+  const stayTag = stayYn === 'Y' ? '#숙박가능' : stayYn === 'N' ? '#숙박불가' : '#정보확인';
+
+  const descriptionParts = [
+    address,
+    phone ? `문의: ${phone}` : '',
+    institution ? `관리기관: ${institution}` : '',
+    mainFacility ? `주요시설: ${mainFacility}` : '',
+    closed ? `휴무: ${closed}` : ''
   ].filter(Boolean);
 
   return {
-    id: f.id || `forest_${index}`,
-    name: name,
-    region: region,
-    theme: theme,
-    location: location,
-    description: `${address}. ${f.phone || ''}. ${f.closed ? `휴무: ${f.closed}.` : ''}`,
-    tags: tags,
+    id,
+    name,
+    region,
+    theme,
+    location,
+    description: descriptionParts.join(' · '),
+    tags: [
+      `#${location.split(' ')[1] || location}`,
+      stayTag,
+      theme !== Theme.ALL ? `#${theme}` : ''
+    ].filter(Boolean),
     imageUrl: FOREST_IMAGES[index % FOREST_IMAGES.length],
-    bookingUrl: f.url || 'https://www.foresttrip.go.kr/',
-    isAd: !!f.isAd
+    bookingUrl: sanitizeUrl(homepage),
+    isAd: false
   };
+};
+
+const rawList = Array.isArray(forestDataRaw) ? forestDataRaw : [];
+
+export const FORESTS: Forest[] = rawList.map((item, index) => {
+  const source = item as ForestSource;
+  return mapForestSourceToForest(source, index);
 });

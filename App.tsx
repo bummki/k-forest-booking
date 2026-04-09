@@ -1,8 +1,9 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Region, Theme } from './types';
+import { Region, Theme, Forest } from './types';
 import { FORESTS, RESERVATION_STEPS, QUICK_BOOKING_LINKS, EXPERIENCES } from './constants';
 import { POSTS } from './posts';
+import { fetchForestsFromPublicData } from './forestApi';
 
 declare global {
   interface Window {
@@ -40,6 +41,9 @@ const App: React.FC = () => {
   const [selectedRegion, setSelectedRegion] = useState<Region>(Region.ALL);
   const [selectedTheme, setSelectedTheme] = useState<Theme>(Theme.ALL);
   const [searchQuery, setSearchQuery] = useState('');
+  const [forests, setForests] = useState<Forest[]>(FORESTS);
+  const [dataStatus, setDataStatus] = useState<'loading' | 'api' | 'fallback'>('loading');
+  const [dataMessage, setDataMessage] = useState('');
   const [postRegion, setPostRegion] = useState<Region>(Region.ALL);
   const [postTheme, setPostTheme] = useState<Theme>(Theme.ALL);
   const [postsVisible, setPostsVisible] = useState(24);
@@ -51,7 +55,7 @@ const App: React.FC = () => {
     explorerRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const filteredForests = FORESTS.filter(f => {
+  const filteredForests = forests.filter(f => {
     const matchesRegion = selectedRegion === Region.ALL || f.region === selectedRegion;
     const matchesTheme = selectedTheme === Theme.ALL || f.theme === selectedTheme;
     const matchesSearch = searchQuery === '' || 
@@ -65,8 +69,8 @@ const App: React.FC = () => {
   const postsWithMeta = useMemo(() => {
     const normalize = (value: string) =>
       value.replace(/\s+/g, '').replace(/[·\-–—]/g, '').trim();
-    const forestMap = new Map<string, (typeof FORESTS)[number]>();
-    FORESTS.forEach((forest) => {
+    const forestMap = new Map<string, Forest>();
+    forests.forEach((forest) => {
       forestMap.set(normalize(forest.name), forest);
     });
     return POSTS.map((post) => {
@@ -78,7 +82,7 @@ const App: React.FC = () => {
         location: forest?.location ?? '전국'
       };
     });
-  }, []);
+  }, [forests]);
 
   const filteredPosts = postsWithMeta.filter((post) => {
     const matchesRegion = postRegion === Region.ALL || post.region === postRegion;
@@ -89,6 +93,49 @@ const App: React.FC = () => {
   useEffect(() => {
     setPostsVisible(24);
   }, [postRegion, postTheme]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const loadForests = async () => {
+      const serviceKey = import.meta.env.VITE_PUBLIC_DATA_API_KEY?.trim();
+      if (!serviceKey) {
+        if (isActive) {
+          setForests(FORESTS);
+          setDataStatus('fallback');
+          setDataMessage('인증키 미설정으로 로컬 데이터를 표시 중입니다.');
+        }
+        return;
+      }
+
+      try {
+        const apiForests = await fetchForestsFromPublicData(serviceKey);
+        if (!isActive) return;
+
+        if (apiForests.length > 0) {
+          setForests(apiForests);
+          setDataStatus('api');
+          setDataMessage(`공공데이터 API 기준 ${apiForests.length}건 로드됨`);
+          return;
+        }
+
+        setForests(FORESTS);
+        setDataStatus('fallback');
+        setDataMessage('API 응답에 데이터가 없어 로컬 데이터를 표시 중입니다.');
+      } catch (error) {
+        if (!isActive) return;
+        setForests(FORESTS);
+        setDataStatus('fallback');
+        setDataMessage(error instanceof Error ? error.message : 'API 호출 실패로 로컬 데이터를 표시 중입니다.');
+      }
+    };
+
+    loadForests();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
 
   return (
@@ -103,6 +150,7 @@ const App: React.FC = () => {
             <a href="#quick-booking" className="hover:text-emerald-700 transition-colors">간편예약</a>
             <a href="#experience" className="hover:text-emerald-700 transition-colors">체험/레포츠</a>
             <a href="#posts" className="hover:text-emerald-700 transition-colors">포스팅</a>
+            <a href="#data-usage" className="hover:text-emerald-700 transition-colors">데이터활용</a>
             <a href="#explorer" className="hover:text-emerald-700 transition-colors">휴양림 검색</a>
             <a href="#guide" className="hover:text-emerald-700 transition-colors">가이드</a>
           </div>
@@ -277,11 +325,43 @@ const App: React.FC = () => {
           </div>
         </section>
 
+        {/* Data Usage Section */}
+        <section id="data-usage" className="py-16 bg-stone-50 border-t border-stone-100">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-black text-stone-900">데이터활용</h2>
+              <p className="text-stone-500 text-sm mt-2">공공데이터포털 Open API를 우선 사용하고, 실패 시 로컬 데이터로 자동 전환됩니다.</p>
+            </div>
+            <div className="bg-white border border-stone-200 rounded-3xl p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <p className="text-xs font-black tracking-widest text-emerald-700">SOURCE</p>
+                <p className="text-sm text-stone-700">전국휴양림표준데이터 (공공데이터포털)</p>
+                <a
+                  href="https://api.data.go.kr/openapi/tn_pubr_public_rcrfrst_api"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-sm font-bold text-emerald-700 hover:underline"
+                >
+                  End Point 확인
+                </a>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs font-black tracking-widest text-emerald-700">STATUS</p>
+                <p className={`text-sm font-bold ${dataStatus === 'api' ? 'text-emerald-700' : dataStatus === 'loading' ? 'text-stone-500' : 'text-amber-700'}`}>
+                  {dataStatus === 'api' ? 'API 데이터 사용 중' : dataStatus === 'loading' ? '데이터 로딩 중' : '로컬 데이터 사용 중'}
+                </p>
+                <p className="text-xs text-stone-500">{dataMessage || '초기 로딩 중입니다.'}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Explorer Section */}
         <section id="explorer" ref={explorerRef} className="py-20 bg-stone-50">
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-16 space-y-6">
               <h2 className="text-3xl md:text-5xl font-black text-stone-900 tracking-tight">전국 휴양림 리스트</h2>
+              <p className="text-sm text-stone-500">현재 {forests.length}건 데이터 표시 중</p>
 
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4 pb-8 max-w-2xl mx-auto">
                 <div className="relative w-full">
