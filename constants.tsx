@@ -6,18 +6,18 @@ type ForestSource = Record<string, unknown>;
 const FALLBACK_BOOKING_URL = 'https://www.foresttrip.go.kr/';
 
 const FOREST_IMAGES = [
-  '/images/forest-01.png',
-  '/images/forest-02.png',
-  '/images/forest-03.png',
-  '/images/forest-04.png',
-  '/images/forest-05.png',
-  '/images/forest-06.png',
-  '/images/forest-07.png',
-  '/images/forest-08.png',
-  '/images/forest-09.png',
-  '/images/forest-10.png',
-  '/images/forest-11.png',
-  '/images/forest-12.png'
+  '/images/forest-01.webp',
+  '/images/forest-02.webp',
+  '/images/forest-03.webp',
+  '/images/forest-04.webp',
+  '/images/forest-05.webp',
+  '/images/forest-06.webp',
+  '/images/forest-07.webp',
+  '/images/forest-08.webp',
+  '/images/forest-09.webp',
+  '/images/forest-10.webp',
+  '/images/forest-11.webp',
+  '/images/forest-12.webp'
 ];
 
 const firstString = (source: ForestSource, keys: string[]): string => {
@@ -51,14 +51,14 @@ export const EXPERIENCES: ExperienceSection[] = [
     description: '자연과 사람이 함께하는 숲길을 느껴보세요.',
     link: 'https://www.foresttrip.go.kr/frtrlMain.do',
     icon: '🥾',
-    bgImage: '/images/forest-05.png'
+    bgImage: '/images/forest-05.webp'
   },
   {
     title: '산림 레포츠',
     description: '도전과 힐링! 자연에서 즐기는 색다른 체험을 즐겨보세요.',
     link: 'https://www.foresttrip.go.kr/mnfrsLeportsMain.do',
     icon: '🚵',
-    bgImage: '/images/forest-10.png'
+    bgImage: '/images/forest-10.webp'
   }
 ];
 

@@ -4,43 +4,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>숲나들e - 국립자연휴양림 예약</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="theme-color" content="#047857">
+
+  <title>숲나들e 자연휴양림 예약 안내 | 전국 국립·공립 자연휴양림 정보</title>
+  <meta name="description"
+    content="전국 자연휴양림 178곳의 위치·연락처·휴무일과 숲나들e 예약 방법을 한곳에 모았습니다. 지역·테마별 검색으로 원하는 휴양림을 빠르게 찾아보세요.">
+  <link rel="canonical" href="https://forest.onnuriinfo.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="숲나들e 자연휴양림 안내">
+  <meta property="og:title" content="숲나들e 자연휴양림 예약 안내">
+  <meta property="og:description" content="전국 자연휴양림 정보와 숲나들e 예약 방법을 지역·테마별로 검색해 보세요.">
+  <meta property="og:url" content="https://forest.onnuriinfo.com/">
+  <meta property="og:image" content="https://forest.onnuriinfo.com/images/forest-01.webp">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
     rel="stylesheet">
-  <!-- 구글 애드센스 전역 스크립트 (자동 전면 광고 방지 설정) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" crossorigin="anonymous"></script>
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({
-      google_ad_client: "ca-pub-2695727848475573",
-      enable_page_level_ads: true,
-      overlays: { bottom: true } // 전면광고(vignette)를 방해하지 않는 하단 오버레이 등만 허용하거나 설정을 조정할 수 있음
-    });
-  </script>
-  <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      scroll-behavior: smooth;
-    }
 
-    .ads-container {
-      min-height: 100px;
-      background: #f9f9f9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 2rem 0;
-      border-radius: 1rem;
-      overflow: hidden;
+  <meta name="google-adsense-account" content="ca-pub-2695727848475573">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2695727848475573"
+    crossorigin="anonymous"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "숲나들e 자연휴양림 안내",
+    "url": "https://forest.onnuriinfo.com/",
+    "description": "전국 자연휴양림 정보와 숲나들e 예약 방법 안내",
+    "inLanguage": "ko-KR",
+    "publisher": {
+      "@type": "Organization",
+      "name": "범키드"
     }
-  </style>
-  <link rel="stylesheet" href="/index.css">
+  }
+  </script>
 </head>
 
 <body class="bg-stone-50 text-stone-900">
   <div id="root"></div>
+  <noscript>
+    <p style="padding:2rem;text-align:center">이 페이지는 자바스크립트가 필요합니다. 자연휴양림 예약은
+      <a href="https://www.foresttrip.go.kr">숲나들e 공식 홈페이지</a>에서도 이용할 수 있습니다.</p>
+  </noscript>
   <script type="module" src="/index.tsx"></script>
 </body>
 

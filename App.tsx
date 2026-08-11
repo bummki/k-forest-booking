@@ -13,11 +13,14 @@ declare global {
 
 // 애드센스 광고 단위 컴포넌트
 const AdUnit: React.FC<{ slot: string; format?: string; className?: string }> = ({ slot, format = "auto", className = "" }) => {
+  const pushed = useRef(false);
+
   useEffect(() => {
+    // StrictMode 이중 마운트 시 같은 <ins>에 두 번 push되는 것을 방지
+    if (pushed.current) return;
+    pushed.current = true;
     try {
-      if (window.adsbygoogle) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      }
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
       console.error('AdSense error:', e);
     }
@@ -55,14 +58,17 @@ const App: React.FC = () => {
     explorerRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const filteredForests = forests.filter(f => {
-    const matchesRegion = selectedRegion === Region.ALL || f.region === selectedRegion;
-    const matchesTheme = selectedTheme === Theme.ALL || f.theme === selectedTheme;
-    const matchesSearch = searchQuery === '' || 
-      f.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      f.location.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesRegion && matchesTheme && matchesSearch;
-  });
+  const filteredForests = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return forests.filter((f) => {
+      const matchesRegion = selectedRegion === Region.ALL || f.region === selectedRegion;
+      const matchesTheme = selectedTheme === Theme.ALL || f.theme === selectedTheme;
+      const matchesSearch = query === '' ||
+        f.name.toLowerCase().includes(query) ||
+        f.location.toLowerCase().includes(query);
+      return matchesRegion && matchesTheme && matchesSearch;
+    });
+  }, [forests, selectedRegion, selectedTheme, searchQuery]);
 
   // Gate view removed
 
@@ -84,11 +90,14 @@ const App: React.FC = () => {
     });
   }, [forests]);
 
-  const filteredPosts = postsWithMeta.filter((post) => {
-    const matchesRegion = postRegion === Region.ALL || post.region === postRegion;
-    const matchesTheme = postTheme === Theme.ALL || post.theme === postTheme;
-    return matchesRegion && matchesTheme;
-  });
+  const filteredPosts = useMemo(
+    () => postsWithMeta.filter((post) => {
+      const matchesRegion = postRegion === Region.ALL || post.region === postRegion;
+      const matchesTheme = postTheme === Theme.ALL || post.theme === postTheme;
+      return matchesRegion && matchesTheme;
+    }),
+    [postsWithMeta, postRegion, postTheme]
+  );
 
   useEffect(() => {
     setPostsVisible(24);
@@ -139,13 +148,18 @@ const App: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-900 animate-in fade-in duration-1000">
+    <div className="min-h-screen flex flex-col font-sans selection:bg-emerald-100 selection:text-emerald-900 page-fade-in">
       <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <span className="text-2xl">🌲</span>
+          <button
+            type="button"
+            aria-label="맨 위로 이동"
+            className="flex items-center gap-2"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <span className="text-2xl" aria-hidden="true">🌲</span>
             <span className="font-black text-xl text-emerald-800 tracking-tighter">숲나들e</span>
-          </div>
+          </button>
           <div className="hidden md:flex gap-8 text-sm font-medium text-stone-600">
             <a href="#quick-booking" className="hover:text-emerald-700 transition-colors">간편예약</a>
             <a href="#experience" className="hover:text-emerald-700 transition-colors">체험/레포츠</a>
@@ -205,6 +219,8 @@ const App: React.FC = () => {
                     src={exp.bgImage}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                     alt={exp.title}
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   <div className="absolute inset-0 p-10 flex flex-col justify-end text-white space-y-4">
@@ -237,7 +253,7 @@ const App: React.FC = () => {
         <section id="intro" className="py-20 bg-white border-t border-stone-100">
           <div className="max-w-7xl mx-auto px-4 text-center space-y-8">
             <span className="text-emerald-600 font-black text-xs tracking-widest uppercase">National Service Info</span>
-            <h2 className="text-4xl md:text-5xl font-black text-stone-900 leading-[1.2]">숲에서 만나는 진정한 휴식</h2>
+            <h1 className="text-4xl md:text-5xl font-black text-stone-900 leading-[1.2]">전국 자연휴양림 예약 정보, 숲에서 만나는 진정한 휴식</h1>
             <p className="max-w-3xl mx-auto text-lg text-stone-500 leading-relaxed">
               전국 국립자연휴양림은 숲나들e 통합 예약 시스템을 통해 쉽고 편리하게 이용할 수 있습니다.<br className="hidden md:block" />
               숙박시설뿐만 아니라 야영장, 숲길, 체험 프로그램까지 자연이 주는 혜택을 한곳에서 만나보세요.
@@ -262,6 +278,7 @@ const App: React.FC = () => {
                   <button
                     key={region}
                     onClick={() => setPostRegion(region)}
+                    aria-pressed={postRegion === region}
                     className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${postRegion === region
                       ? 'bg-emerald-700 text-white shadow-md'
                       : 'bg-white text-stone-500 border border-stone-200 hover:border-emerald-300'
@@ -276,6 +293,7 @@ const App: React.FC = () => {
                   <button
                     key={theme}
                     onClick={() => setPostTheme(theme)}
+                    aria-pressed={postTheme === theme}
                     className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${postTheme === theme
                       ? 'bg-stone-800 text-white shadow-md'
                       : 'bg-white text-stone-500 border border-stone-200 hover:border-stone-400'
@@ -378,6 +396,7 @@ const App: React.FC = () => {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
+                      aria-label="검색어 지우기"
                       className="absolute inset-y-0 right-4 flex items-center text-stone-400 hover:text-stone-600 transition-colors"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -391,6 +410,7 @@ const App: React.FC = () => {
                   <button
                     key={region}
                     onClick={() => setSelectedRegion(region)}
+                    aria-pressed={selectedRegion === region}
                     className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${selectedRegion === region
                       ? 'bg-emerald-700 text-white shadow-md'
                       : 'bg-white text-stone-500 border border-stone-200 hover:border-emerald-300'
@@ -406,6 +426,7 @@ const App: React.FC = () => {
                   <button
                     key={theme}
                     onClick={() => setSelectedTheme(theme)}
+                    aria-pressed={selectedTheme === theme}
                     className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${selectedTheme === theme
                       ? 'bg-stone-800 text-white shadow-md'
                       : 'bg-white text-stone-500 border border-stone-200 hover:border-stone-400'
@@ -419,6 +440,13 @@ const App: React.FC = () => {
               <AdUnit slot="7932374339" format="horizontal" className="mt-10" />
             </div>
 
+            {filteredForests.length === 0 && (
+              <div className="text-center py-20 space-y-3">
+                <p className="text-lg font-black text-stone-700">조건에 맞는 휴양림이 없습니다.</p>
+                <p className="text-sm text-stone-500">검색어를 지우거나 다른 지역·테마를 선택해 보세요.</p>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredForests.map((forest, index) => (
                 <React.Fragment key={forest.id}>
@@ -427,7 +455,9 @@ const App: React.FC = () => {
                     <div className="h-56 relative overflow-hidden">
                       <img
                         src={forest.imageUrl}
-                        alt={forest.name}
+                        alt={`${forest.name} 전경`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute top-4 right-4">
@@ -493,7 +523,7 @@ const App: React.FC = () => {
                   <h2 className="text-4xl md:text-6xl font-black leading-tight">숲나들e<br />간편 예약 가이드</h2>
                   <p className="text-stone-400 text-lg leading-relaxed">전국의 국립자연휴양림은 통합 아이디 하나로<br />언제 어디서나 쉽게 예약할 수 있습니다.</p>
                   <div className="pt-8">
-                    <a href="https://www.foresttrip.go.kr" target="_blank" className="inline-block bg-emerald-600 px-12 py-5 rounded-full font-black hover:bg-emerald-500 transition-all shadow-xl">공식 홈페이지 방문</a>
+                    <a href="https://www.foresttrip.go.kr" target="_blank" rel="noopener noreferrer" className="inline-block bg-emerald-600 px-12 py-5 rounded-full font-black hover:bg-emerald-500 transition-all shadow-xl">공식 홈페이지 방문</a>
                   </div>
                 </div>
                 <div className="space-y-8">
@@ -534,7 +564,7 @@ const App: React.FC = () => {
               <a href="#quick-booking" className="hover:text-emerald-600">간편예약</a>
               <a href="#experience" className="hover:text-emerald-600">체험/레포츠</a>
               <a href="#explorer" className="hover:text-emerald-600">지역리스트</a>
-              <a href="https://www.foresttrip.go.kr" className="hover:text-emerald-600 border-b-2 border-emerald-500">공식사이트</a>
+              <a href="https://www.foresttrip.go.kr" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 border-b-2 border-emerald-500">공식사이트</a>
             </div>
           </div>
           <div className="mt-16 pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between gap-6 text-xs text-stone-500 font-medium">
