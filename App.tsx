@@ -11,6 +11,10 @@ declare global {
   }
 }
 
+// 휴양림 이름 ↔ 포스팅 제목 매칭용 정규화 (공백·구분자 제거)
+const normalizeName = (value: string) =>
+  value.replace(/\s+/g, '').replace(/[·\-–—]/g, '').trim();
+
 // 애드센스 광고 단위 컴포넌트
 const AdUnit: React.FC<{ slot: string; format?: string; className?: string }> = ({ slot, format = "auto", className = "" }) => {
   const pushed = useRef(false);
@@ -73,14 +77,12 @@ const App: React.FC = () => {
   // Gate view removed
 
   const postsWithMeta = useMemo(() => {
-    const normalize = (value: string) =>
-      value.replace(/\s+/g, '').replace(/[·\-–—]/g, '').trim();
     const forestMap = new Map<string, Forest>();
     forests.forEach((forest) => {
-      forestMap.set(normalize(forest.name), forest);
+      forestMap.set(normalizeName(forest.name), forest);
     });
     return POSTS.map((post) => {
-      const forest = forestMap.get(normalize(post.title));
+      const forest = forestMap.get(normalizeName(post.title));
       return {
         ...post,
         region: forest?.region ?? Region.ALL,
@@ -89,6 +91,15 @@ const App: React.FC = () => {
       };
     });
   }, [forests]);
+
+  // 휴양림 → 자체 포스팅 경로 (카드에서 내부 상세 페이지로 연결)
+  const postHrefByForest = useMemo(() => {
+    const map = new Map<string, string>();
+    POSTS.forEach((post) => {
+      map.set(normalizeName(post.title), post.href);
+    });
+    return map;
+  }, []);
 
   const filteredPosts = useMemo(
     () => postsWithMeta.filter((post) => {
@@ -483,14 +494,39 @@ const App: React.FC = () => {
                             </span>
                           ))}
                         </div>
-                        <a
-                          href={forest.bookingUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block w-full text-center bg-stone-900 hover:bg-emerald-700 text-white py-4 rounded-xl text-xs font-black transition-all"
-                        >
-                          상세 정보 및 예약
-                        </a>
+                        {(() => {
+                          const postHref = postHrefByForest.get(normalizeName(forest.name));
+                          if (!postHref) {
+                            return (
+                              <a
+                                href={forest.bookingUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full text-center bg-stone-900 hover:bg-emerald-700 text-white py-4 rounded-xl text-xs font-black transition-all"
+                              >
+                                상세 정보 및 예약
+                              </a>
+                            );
+                          }
+                          return (
+                            <div className="grid grid-cols-2 gap-2">
+                              <a
+                                href={encodeURI(postHref)}
+                                className="block text-center bg-emerald-700 hover:bg-emerald-800 text-white py-4 rounded-xl text-xs font-black transition-all"
+                              >
+                                자세히 보기
+                              </a>
+                              <a
+                                href={forest.bookingUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block text-center bg-stone-900 hover:bg-stone-800 text-white py-4 rounded-xl text-xs font-black transition-all"
+                              >
+                                예약하러 가기
+                              </a>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -564,6 +600,7 @@ const App: React.FC = () => {
               <a href="#quick-booking" className="hover:text-emerald-600">간편예약</a>
               <a href="#experience" className="hover:text-emerald-600">체험/레포츠</a>
               <a href="#explorer" className="hover:text-emerald-600">지역리스트</a>
+              <a href="/privacy.html" className="hover:text-emerald-600">개인정보처리방침</a>
               <a href="https://www.foresttrip.go.kr" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 border-b-2 border-emerald-500">공식사이트</a>
             </div>
           </div>
