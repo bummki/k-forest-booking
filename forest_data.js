@@ -1252,7 +1252,21 @@ const forestData = [
             "address": "경기 가평군 북면 논남기길 520 강씨봉자연휴양림",
                 "phone": "031-8008-6611",
                     "closed": "매주 화요일"
-}
+},
+    {
+        "name": "내장산자연휴양림",
+        "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=ID02030131",
+        "address": "전북특별자치도 정읍시 첨단과학로 565 내장산자연휴양림",
+        "phone": "063-536-5766",
+        "closed": "매주 화요일"
+    },
+    {
+        "name": "횡성자연휴양림",
+        "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=ID04030002",
+        "address": "강원 횡성군 갑천면 정포로430번길 113 횡성자연휴양림",
+        "phone": "033-344-3391",
+        "closed": "매주 화요일"
+    }
 ];
 
 export default forestData;
