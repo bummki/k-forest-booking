@@ -1,3 +1,31 @@
-/* 추가 스타일이 필요하면 여기에 작성하세요 */
-body {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', system-ui, -apple-system, 'Malgun Gothic', sans-serif;
+  }
+}
+
+@layer components {
+  /* 기존 animate-in / fade-in 클래스는 Tailwind 코어에 없어 동작하지 않았습니다. */
+  .page-fade-in {
+    animation: page-fade-in 700ms ease-out both;
+  }
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .page-fade-in { animation: none; }
 }

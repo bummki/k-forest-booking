@@ -6,18 +6,18 @@ type ForestSource = Record<string, unknown>;
 const FALLBACK_BOOKING_URL = 'https://www.foresttrip.go.kr/';
 
 const FOREST_IMAGES = [
-  '/images/forest-01.png',
-  '/images/forest-02.png',
-  '/images/forest-03.png',
-  '/images/forest-04.png',
-  '/images/forest-05.png',
-  '/images/forest-06.png',
-  '/images/forest-07.png',
-  '/images/forest-08.png',
-  '/images/forest-09.png',
-  '/images/forest-10.png',
-  '/images/forest-11.png',
-  '/images/forest-12.png'
+  '/images/forest-01.webp',
+  '/images/forest-02.webp',
+  '/images/forest-03.webp',
+  '/images/forest-04.webp',
+  '/images/forest-05.webp',
+  '/images/forest-06.webp',
+  '/images/forest-07.webp',
+  '/images/forest-08.webp',
+  '/images/forest-09.webp',
+  '/images/forest-10.webp',
+  '/images/forest-11.webp',
+  '/images/forest-12.webp'
 ];
 
 const firstString = (source: ForestSource, keys: string[]): string => {
@@ -51,14 +51,14 @@ export const EXPERIENCES: ExperienceSection[] = [
     description: '자연과 사람이 함께하는 숲길을 느껴보세요.',
     link: 'https://www.foresttrip.go.kr/frtrlMain.do',
     icon: '🥾',
-    bgImage: '/images/forest-05.png'
+    bgImage: '/images/forest-05.webp'
   },
   {
     title: '산림 레포츠',
     description: '도전과 힐링! 자연에서 즐기는 색다른 체험을 즐겨보세요.',
     link: 'https://www.foresttrip.go.kr/mnfrsLeportsMain.do',
     icon: '🚵',
-    bgImage: '/images/forest-10.png'
+    bgImage: '/images/forest-10.webp'
   }
 ];
 
@@ -83,15 +83,22 @@ export const RESERVATION_STEPS: ReservationStep[] = [
   }
 ];
 
+// '충남'과 '충청남도'처럼 축약형과 정식 명칭이 섞여 들어오므로 둘 다 인식한다.
+const REGION_KEYWORDS: Array<[Region, string[]]> = [
+  [Region.JEJU, ['제주']],
+  [Region.GANGWON, ['강원']],
+  [Region.GYEONGGI, ['경기', '인천', '서울']],
+  [Region.CHUNGCHEONG, ['충남', '충북', '충청', '대전', '세종']],
+  [Region.JEOLLA, ['전남', '전북', '전라', '광주']],
+  [Region.GYEONGSANG, ['경남', '경북', '경상', '부산', '대구', '울산']]
+];
+
 export const getRegionFromAddress = (address: string): Region => {
-  if (!address) return Region.GYEONGSANG;
-  if (address.includes('경기') || address.includes('인천') || address.includes('서울')) return Region.GYEONGGI;
-  if (address.includes('강원')) return Region.GANGWON;
-  if (address.includes('충남') || address.includes('충북') || address.includes('대전') || address.includes('세종')) return Region.CHUNGCHEONG;
-  if (address.includes('전남') || address.includes('전북') || address.includes('광주')) return Region.JEOLLA;
-  if (address.includes('경남') || address.includes('경북') || address.includes('부산') || address.includes('대구') || address.includes('울산')) return Region.GYEONGSANG;
-  if (address.includes('제주')) return Region.JEJU;
-  return Region.GYEONGSANG;
+  if (!address) return Region.ALL;
+  for (const [region, keywords] of REGION_KEYWORDS) {
+    if (keywords.some((k) => address.includes(k))) return region;
+  }
+  return Region.ALL;
 };
 
 export const getLocationFromAddress = (address: string): string => {
@@ -113,26 +120,41 @@ export const getThemeFromNameAndAddress = (name: string, address: string): Theme
 };
 
 export const mapForestSourceToForest = (item: ForestSource, index: number): Forest => {
-  const address = firstString(item, ['address', 'rdnmadr']);
-  const name = firstString(item, ['name', 'rcrfrstNm']) || `휴양림 ${index + 1}`;
-  const phone = firstString(item, ['phone', 'telephoneNumber']);
+  // 공공데이터포털 전국휴양림표준데이터는 snake_case 키를 반환한다.
+  // 로컬 forest_data.js 키를 먼저 보고, 없으면 API 키를 본다.
+  const address = firstString(item, ['address', 'refine_road_nm_addr', 'rdnmadr']);
+  const name = firstString(item, ['name', 'recrfrst_nm', 'rcrfrstNm']) || `휴양림 ${index + 1}`;
+  const phone = firstString(item, ['phone', 'recrfrst_telno', 'telephoneNumber']);
   const closed = firstString(item, ['closed']);
-  const homepage = firstString(item, ['url', 'homepageUrl']);
-  const institution = firstString(item, ['institutionNm']);
-  const mainFacility = firstString(item, ['mainFcltyNm']);
-  const stayYn = firstString(item, ['stayngPosblYn']);
+  const homepage = firstString(item, ['url', 'hmpg_addr', 'homepageUrl']);
+  const institution = firstString(item, ['institution', 'mnginst_nm', 'institutionNm']);
+  const mainFacility = firstString(item, ['facility', 'main_faclt_info', 'mainFcltyNm']);
+  const stayYn = firstString(item, ['stay', 'stayng_posbl_yn', 'stayngPosblYn']);
+  const sido = firstString(item, ['sido']);
+  const kind = firstString(item, ['kind', 'recrfrst_div_nm']);
+  const fee = firstString(item, ['fee', 'adms_chrg_guid']);
+  const capacity = firstString(item, ['capacity', 'aceptnc_psncnt']);
+  const interest = Number(firstString(item, ['interest']));
+  const lat = Number(firstString(item, ['lat', 'refine_wgs84_lat']));
+  const lng = Number(firstString(item, ['lng', 'refine_wgs84_logt']));
   const id = firstString(item, ['id']) || `forest_${index}`;
 
-  const region = getRegionFromAddress(address);
+  // 시도명이 있으면 주소 파싱보다 정확하므로 우선 사용
+  const region = getRegionFromAddress(sido || address);
   const theme = getThemeFromNameAndAddress(name, address);
   const location = getLocationFromAddress(address);
   const stayTag = stayYn === 'Y' ? '#숙박가능' : stayYn === 'N' ? '#숙박불가' : '#정보확인';
+
+  const capacityLabel = capacity && !Number.isNaN(Number(capacity))
+    ? `수용인원: ${Number(capacity).toLocaleString('ko-KR')}명`
+    : '';
 
   const descriptionParts = [
     address,
     phone ? `문의: ${phone}` : '',
     institution ? `관리기관: ${institution}` : '',
     mainFacility ? `주요시설: ${mainFacility}` : '',
+    capacityLabel,
     closed ? `휴무: ${closed}` : ''
   ].filter(Boolean);
 
@@ -146,11 +168,18 @@ export const mapForestSourceToForest = (item: ForestSource, index: number): Fore
     tags: [
       `#${location.split(' ')[1] || location}`,
       stayTag,
+      kind ? `#${kind}` : '',
+      fee.includes('무료') ? '#입장료무료' : '',
       theme !== Theme.ALL ? `#${theme}` : ''
     ].filter(Boolean),
     imageUrl: FOREST_IMAGES[index % FOREST_IMAGES.length],
     bookingUrl: sanitizeUrl(homepage),
-    isAd: false
+    isAd: false,
+    fee: fee || undefined,
+    capacity: capacity || undefined,
+    lat: Number.isFinite(lat) && lat !== 0 ? lat : undefined,
+    lng: Number.isFinite(lng) && lng !== 0 ? lng : undefined,
+    interest: Number.isFinite(interest) && interest > 0 ? interest : undefined
   };
 };
 

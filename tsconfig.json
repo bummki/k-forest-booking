@@ -29,8 +29,7 @@
         "posts.ts",
         "types.ts",
         "vite-env.d.ts",
-        "forest_data.js",
-        "map_data.js"
+        "forest_data.js"
     ],
     "exclude": [
         "node_modules",
