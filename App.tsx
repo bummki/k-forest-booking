@@ -11,6 +11,57 @@ declare global {
   }
 }
 
+// 숲나들e 국립휴양림 예약 일정 (전국 공통 고정 규칙)
+type BookingEvent = { label: string; detail: string; date: Date; ongoing?: boolean };
+
+const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+/** 이번 달 지정일이 이미 지났으면 다음 달 같은 날을 반환 */
+const nextMonthly = (today: Date, day: number) => {
+  const base = startOfDay(today);
+  const thisMonth = new Date(base.getFullYear(), base.getMonth(), day);
+  return thisMonth >= base
+    ? thisMonth
+    : new Date(base.getFullYear(), base.getMonth() + 1, day);
+};
+
+/** 다음(또는 오늘) 수요일 */
+const nextWednesday = (today: Date) => {
+  const base = startOfDay(today);
+  const diff = (3 - base.getDay() + 7) % 7;
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate() + diff);
+};
+
+/** 4~9일처럼 기간으로 열리는 일정은, 기간 안에 있으면 '진행 중'으로 본다 */
+const nextRange = (today: Date, from: number, to: number) => {
+  const base = startOfDay(today);
+  const day = base.getDate();
+  if (day >= from && day <= to) return { date: base, ongoing: true };
+  return { date: nextMonthly(today, from), ongoing: false };
+};
+
+const getBookingEvents = (today: Date): BookingEvent[] => {
+  const draw = nextRange(today, 4, 9);
+  return [
+    {
+      label: '추첨 신청',
+      detail: draw.ongoing
+        ? '신청 진행 중 · 매월 9일 18:00 마감'
+        : '매월 4~9일 09:00~18:00 · 금·토·공휴일 전날 입실분',
+      date: draw.date,
+      ongoing: draw.ongoing
+    },
+    { label: '추첨 발표', detail: '매월 10일 16:00', date: nextMonthly(today, 10) },
+    { label: '잔여분 선착순', detail: '매월 15일 09:00', date: nextMonthly(today, 15) },
+    { label: '평일 선착순', detail: '매주 수요일 09:00 · 6주 뒤 월요일까지', date: nextWednesday(today) }
+  ].sort((a, b) => a.date.getTime() - b.date.getTime());
+};
+
+const dday = (target: Date, today: Date) => {
+  const diff = Math.round((startOfDay(target).getTime() - startOfDay(today).getTime()) / 86400000);
+  return diff === 0 ? 'D-DAY' : `D-${diff}`;
+};
+
 // 휴양림 이름 ↔ 포스팅 제목 매칭용 정규화 (공백·구분자 제거)
 const normalizeName = (value: string) =>
   value.replace(/\s+/g, '').replace(/[·\-–—]/g, '').trim();
@@ -49,6 +100,10 @@ const App: React.FC = () => {
   const [selectedTheme, setSelectedTheme] = useState<Theme>(Theme.ALL);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'default' | 'popular'>('default');
+  const [mapReady, setMapReady] = useState(false);
+  const mapSectionRef = useRef<HTMLDivElement>(null);
+  const mapNodeRef = useRef<HTMLDivElement>(null);
+  const bookingEvents = useMemo(() => getBookingEvents(new Date()), []);
   const [forests, setForests] = useState<Forest[]>(FORESTS);
   const [dataStatus, setDataStatus] = useState<'loading' | 'api' | 'fallback'>('loading');
   const [dataMessage, setDataMessage] = useState('');
@@ -99,6 +154,34 @@ const App: React.FC = () => {
     });
   }, [forests]);
 
+  // 필터 버튼 옆에 표시할 건수 (자기 자신의 조건은 제외하고 계산)
+  const filterCounts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch = (f: Forest) =>
+      query === '' || f.name.toLowerCase().includes(query) || f.location.toLowerCase().includes(query);
+
+    const byRegion = {} as Record<string, number>;
+    const byTheme = {} as Record<string, number>;
+
+    forests.forEach((f) => {
+      if (!matchesSearch(f)) return;
+      if (selectedTheme === Theme.ALL || f.theme === selectedTheme) {
+        byRegion[f.region] = (byRegion[f.region] || 0) + 1;
+        byRegion[Region.ALL] = (byRegion[Region.ALL] || 0) + 1;
+      }
+      if (selectedRegion === Region.ALL || f.region === selectedRegion) {
+        byTheme[f.theme] = (byTheme[f.theme] || 0) + 1;
+        byTheme[Theme.ALL] = (byTheme[Theme.ALL] || 0) + 1;
+      }
+    });
+    return { byRegion, byTheme };
+  }, [forests, selectedRegion, selectedTheme, searchQuery]);
+
+  const mappableForests = useMemo(
+    () => forests.filter((f) => f.lat !== undefined && f.lng !== undefined),
+    [forests]
+  );
+
   // 휴양림 → 자체 포스팅 경로 (카드에서 내부 상세 페이지로 연결)
   const postHrefByForest = useMemo(() => {
     const map = new Map<string, string>();
@@ -120,6 +203,56 @@ const App: React.FC = () => {
   useEffect(() => {
     setPostsVisible(24);
   }, [postRegion, postTheme]);
+
+  // 지도 섹션이 화면에 들어올 때만 Leaflet을 내려받는다 (초기 로딩 보호)
+  useEffect(() => {
+    const node = mapSectionRef.current;
+    if (!node || mapReady) return;
+
+    const load = () => {
+      if (document.getElementById('leaflet-js')) { setMapReady(true); return; }
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';
+      document.head.appendChild(css);
+      const js = document.createElement('script');
+      js.id = 'leaflet-js';
+      js.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+      js.onload = () => setMapReady(true);
+      document.head.appendChild(js);
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { load(); observer.disconnect(); }
+    }, { rootMargin: '200px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [mapReady]);
+
+  useEffect(() => {
+    const L = (window as unknown as { L?: any }).L;
+    const node = mapNodeRef.current;
+    if (!mapReady || !L || !node || mappableForests.length === 0) return;
+
+    const map = L.map(node, { scrollWheelZoom: false }).setView([36.5, 127.8], 7);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    mappableForests.forEach((f) => {
+      L.circleMarker([f.lat, f.lng], {
+        radius: 6, color: '#047857', weight: 2, fillColor: '#10b981', fillOpacity: 0.85
+      })
+        .addTo(map)
+        .bindPopup(
+          `<strong>${f.name}</strong><br>${f.location}` +
+          `<br><a href="${f.bookingUrl}" target="_blank" rel="noopener noreferrer">예약 페이지 열기</a>`
+        );
+    });
+
+    return () => { map.remove(); };
+  }, [mapReady, mappableForests]);
 
   useEffect(() => {
     let isActive = true;
@@ -189,6 +322,9 @@ const App: React.FC = () => {
             <span className="font-black text-xl text-emerald-800 tracking-tighter">숲나들e</span>
           </button>
           <div className="hidden md:flex gap-8 text-sm font-medium text-stone-600">
+            <a href="#schedule" className="hover:text-emerald-700 transition-colors">예약일정</a>
+            <a href="#map" className="hover:text-emerald-700 transition-colors">지도</a>
+            <a href="/ranking.html" className="hover:text-emerald-700 transition-colors">인기순위</a>
             <a href="#quick-booking" className="hover:text-emerald-700 transition-colors">간편예약</a>
             <a href="#experience" className="hover:text-emerald-700 transition-colors">체험/레포츠</a>
             <a href="#posts" className="hover:text-emerald-700 transition-colors">포스팅</a>
@@ -206,6 +342,42 @@ const App: React.FC = () => {
       </nav>
 
       <main className="flex-1">
+        {/* 예약 오픈 일정 */}
+        <section id="schedule" className="py-14 bg-stone-900">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-8 space-y-2">
+              <h2 className="text-2xl md:text-3xl font-black text-white">다음 예약 오픈까지</h2>
+              <p className="text-stone-400 text-sm">국립자연휴양림 공통 일정입니다. 공립·사립은 운영기관에 따라 다를 수 있습니다.</p>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {bookingEvents.map((ev) => {
+                const badge = ev.ongoing ? '진행 중' : dday(ev.date, new Date());
+                const isToday = ev.ongoing || badge === 'D-DAY';
+                return (
+                  <div
+                    key={ev.label}
+                    className={`rounded-3xl p-6 border transition-colors ${isToday
+                      ? 'bg-emerald-600 border-emerald-400'
+                      : 'bg-white/5 border-white/10'
+                      }`}
+                  >
+                    <div className={`text-xs font-black tracking-widest ${isToday ? 'text-white' : 'text-emerald-400'}`}>
+                      {badge}
+                    </div>
+                    <h3 className="mt-2 text-lg font-black text-white">{ev.label}</h3>
+                    <p className="mt-1 text-xs text-stone-300 leading-relaxed">{ev.detail}</p>
+                    <p className={`mt-3 text-[11px] font-bold ${isToday ? 'text-emerald-100' : 'text-stone-400'}`}>
+                      {ev.ongoing
+                        ? '오늘 신청 가능'
+                        : ev.date.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
         {/* Quick Booking Links Section */}
         <section id="quick-booking" className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4">
@@ -402,6 +574,27 @@ const App: React.FC = () => {
           </div>
         </section>
 
+        {/* 지도 */}
+        <section id="map" className="py-16 bg-white border-t border-stone-100">
+          <div className="max-w-7xl mx-auto px-4" ref={mapSectionRef}>
+            <div className="text-center mb-8 space-y-2">
+              <h2 className="text-3xl font-black text-stone-900">지도로 찾기</h2>
+              <p className="text-stone-500 text-sm">
+                좌표가 확인된 {mappableForests.length}곳을 표시합니다. 마커를 누르면 예약 페이지로 이동할 수 있어요.
+              </p>
+            </div>
+            <div
+              ref={mapNodeRef}
+              className="w-full h-[480px] rounded-[2rem] overflow-hidden border border-stone-200 bg-stone-100 flex items-center justify-center"
+            >
+              {!mapReady && <span className="text-sm font-bold text-stone-400">지도를 불러오는 중입니다…</span>}
+            </div>
+            <p className="mt-3 text-center text-[11px] text-stone-400">
+              지도 데이터 © OpenStreetMap 기여자 · 좌표 출처: 공공데이터포털 전국휴양림표준데이터, 산림청 산림공간정보
+            </p>
+          </div>
+        </section>
+
         {/* Explorer Section */}
         <section id="explorer" ref={explorerRef} className="py-20 bg-stone-50">
           <div className="max-w-7xl mx-auto px-4">
@@ -445,6 +638,7 @@ const App: React.FC = () => {
                       }`}
                   >
                     {region}
+                    <span className="ml-1.5 opacity-60 font-medium">{filterCounts.byRegion[region] || 0}</span>
                   </button>
                 ))}
               </div>
@@ -461,6 +655,7 @@ const App: React.FC = () => {
                       }`}
                   >
                     {theme}
+                    <span className="ml-1.5 opacity-60 font-medium">{filterCounts.byTheme[theme] || 0}</span>
                   </button>
                 ))}
               </div>
@@ -649,6 +844,7 @@ const App: React.FC = () => {
               <a href="#quick-booking" className="hover:text-emerald-600">간편예약</a>
               <a href="#experience" className="hover:text-emerald-600">체험/레포츠</a>
               <a href="#explorer" className="hover:text-emerald-600">지역리스트</a>
+              <a href="/ranking.html" className="hover:text-emerald-600">인기순위</a>
               <a href="/privacy.html" className="hover:text-emerald-600">개인정보처리방침</a>
               <a href="https://www.foresttrip.go.kr" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 border-b-2 border-emerald-500">공식사이트</a>
             </div>
