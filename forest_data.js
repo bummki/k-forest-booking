@@ -113,7 +113,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=ID04030001",
         "address": "강원 원주시 신림면 소야1길 72 피노키오자연휴양림",
         "phone": "033-764-3007",
-        "closed": ""
+        "closed": "",
+        "lat": "37.259127",
+        "lng": "128.16531"
     },
     {
         "name": "하동편백자연휴양림",
@@ -468,7 +470,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=ID02030043",
         "address": "강원특별자치도 춘천시 사북면 화악지암1길 130 집다리골자연휴양림",
         "phone": "033-243-8920",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.97777",
+        "lng": "127.574205"
     },
     {
         "name": "천관산 자연휴양림",
@@ -711,7 +715,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0222",
         "address": "강원 춘천시 사북면 사여골길 294",
         "phone": "033-243-9261",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "38.013587",
+        "lng": "127.759476"
     },
     {
         "name": "운문산 자연휴양림",
@@ -844,7 +850,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0102",
         "address": "강원 인제군 북면 연화동길 7",
         "phone": "033-462-5031",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "38.232837",
+        "lng": "128.351168"
     },
     {
         "name": "용봉산자연휴양림",
@@ -1403,7 +1411,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0107",
         "address": "강원 홍천군 내면 삼봉휴양길 276",
         "phone": "033-435-8536",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.854918",
+        "lng": "128.462905"
     },
     {
         "name": "삼척활기자연휴양림",
@@ -1602,14 +1612,18 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0110",
         "address": "강원 철원군 근남면 하오재로 818",
         "phone": "033-458-9426",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "38.143974",
+        "lng": "127.473253"
     },
     {
         "name": "방태산 자연휴양림",
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0109",
         "address": "강원 인제군 기린면 방태산길 241",
         "phone": "033-463-8590",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.922774",
+        "lng": "128.39805"
     },
     {
         "name": "방화동자연휴양림",
@@ -1776,7 +1790,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0112",
         "address": "강원 양양군 서면 미천골길 115",
         "phone": "033-673-1806",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.93692",
+        "lng": "128.530937"
     },
     {
         "name": "무등산편백자연휴양림",
@@ -1819,7 +1835,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0243",
         "address": "강원 평창군 진부면 아차골길 132",
         "phone": "033-334-8815",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.567665",
+        "lng": "128.582111"
     },
     {
         "name": "만수산자연휴양림",
@@ -1991,7 +2009,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0111",
         "address": "강원 강릉시 성산면 삼포암길 133",
         "phone": "033-641-9990",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.712651",
+        "lng": "128.786049"
     },
     {
         "name": "대봉산자연휴양림",
@@ -2326,7 +2346,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0244",
         "address": "강원 삼척시 원덕읍 임원안길 525-145",
         "phone": "033-574-2553",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.237128",
+        "lng": "129.299003"
     },
     {
         "name": "강원숲체험장",
@@ -2404,7 +2426,9 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0113",
         "address": "강원 정선군 정선읍 가리왕산로 791",
         "phone": "033-562-5833",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "lat": "37.426849",
+        "lng": "128.568085"
     },
     {
         "name": "갈모봉 자연휴양림",
@@ -2871,6 +2895,39 @@ const forestData = [
         "facility": "오토캠핑장",
         "lat": "35.39881801",
         "lng": "128.9348445"
+    },
+    {
+        "name": "안인진임해자연휴양림",
+        "url": "http://www.gtdc.or.kr/html/dzDocument/000020000300001.html",
+        "address": "강원도 강릉시 강동면 율곡로1715-85",
+        "phone": "033-640-4790",
+        "closed": "",
+        "sido": "강원특별자치도",
+        "kind": "지자체",
+        "lat": "37.718427",
+        "lng": "128.998561"
+    },
+    {
+        "name": "두릉산자연휴양림",
+        "url": "http://www.huyang.go.kr/",
+        "address": "강원도 홍천군 서면 한치골길 262",
+        "phone": "033-430-7501",
+        "closed": "",
+        "sido": "강원특별자치도",
+        "kind": "개인",
+        "lat": "37.646036",
+        "lng": "127.678865"
+    },
+    {
+        "name": "삼복자연휴양림(구둔내)",
+        "url": "http://www.dunnae.co.kr/",
+        "address": "강원도 횡성군 둔내면 청태산로466번길 93",
+        "phone": "033-343-8155~6",
+        "closed": "",
+        "sido": "강원특별자치도",
+        "kind": "개인",
+        "lat": "37.515584",
+        "lng": "128.275747"
     }
 ];
 
