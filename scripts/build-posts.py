@@ -18,7 +18,8 @@ import unicodedata
 import urllib.parse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_posts_lib import SITE, build, images, load_css, load_forests, load_posts, norm  # noqa: E402
+from build_posts_lib import (SITE, build, build_context, images, load_css,  # noqa: E402
+                             load_forests, load_posts, norm)
 
 
 def next_index(existing_files):
@@ -65,6 +66,7 @@ def main():
     # 이름 기준 정렬 순서를 인덱스로 써서, 재실행해도 결과가 같도록 한다.
     order = {norm(f['name']): i for i, f in enumerate(sorted(forests, key=lambda f: f['name']))}
     by_name = {norm(t): h for t, h in existing}
+    ctx = build_context(forests, by_name)
     files = glob.glob('public/posts/*.html')
     counter = next_index(files)
 
@@ -82,7 +84,7 @@ def main():
             fname = f"{counter:03d}_{f['name'].replace('/', '_')}.html"
             counter += 1
         open('public/posts/' + fname, 'w', encoding='utf-8').write(
-            build(f, order[key], fname, css, imgs))
+            build(f, order[key], fname, css, imgs, ctx))
         pairs.append((f['name'], '/posts/' + fname))
         made += 1
 
