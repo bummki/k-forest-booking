@@ -134,6 +134,7 @@ export const mapForestSourceToForest = (item: ForestSource, index: number): Fore
   const kind = firstString(item, ['kind', 'recrfrst_div_nm']);
   const fee = firstString(item, ['fee', 'adms_chrg_guid']);
   const capacity = firstString(item, ['capacity', 'aceptnc_psncnt']);
+  const interest = Number(firstString(item, ['interest']));
   const lat = Number(firstString(item, ['lat', 'refine_wgs84_lat']));
   const lng = Number(firstString(item, ['lng', 'refine_wgs84_logt']));
   const id = firstString(item, ['id']) || `forest_${index}`;
@@ -177,7 +178,8 @@ export const mapForestSourceToForest = (item: ForestSource, index: number): Fore
     fee: fee || undefined,
     capacity: capacity || undefined,
     lat: Number.isFinite(lat) && lat !== 0 ? lat : undefined,
-    lng: Number.isFinite(lng) && lng !== 0 ? lng : undefined
+    lng: Number.isFinite(lng) && lng !== 0 ? lng : undefined,
+    interest: Number.isFinite(interest) && interest > 0 ? interest : undefined
   };
 };
 

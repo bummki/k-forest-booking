@@ -12,6 +12,7 @@ const forestData = [
         "fee": "개인(어른1000원+청소년600원+어린이300원)+단체(어른800원+청소년500원+어린이200원)",
         "stay": "Y",
         "facility": "숲속의집+야영장+숲속수련장",
+        "interest": "693",
         "lat": "36.11262716",
         "lng": "126.664181"
     },
@@ -35,14 +36,16 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0116",
         "address": "강원 화천군 간동면 배후령길 1144 화천숲속야영장",
         "phone": "033-441-4466",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "744"
     },
     {
         "name": "황정산 자연휴양림",
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0242",
         "address": "충북 단양군 대강면 황정산로 239-11",
         "phone": "043-421-0608",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "396"
     },
     {
         "name": "회문산 자연휴양림",
@@ -57,6 +60,7 @@ const forestData = [
         "fee": "어른 1000원 청소년 600원 어린이 300원",
         "stay": "Y",
         "facility": "숲속의 집+산림문화 휴양관+야영시설",
+        "interest": "228",
         "lat": "35.50195867",
         "lng": "127.1148251"
     },
@@ -170,7 +174,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0193",
         "address": "경북 울진군 금강송면 불영계곡로 880",
         "phone": "054-783-3167",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "280"
     },
     {
         "name": "팔공산금화자연휴양림",
@@ -209,7 +214,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0182",
         "address": "경북 영덕군 병곡면 칠보산길 587",
         "phone": "054-732-1607",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "486"
     },
     {
         "name": "칼봉산자연휴양림",
@@ -328,7 +334,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0183",
         "address": "경북 봉화군 석포면 청옥로 1552-163",
         "phone": "054-672-1051",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "404"
     },
     {
         "name": "청태산 자연휴양림",
@@ -343,6 +350,7 @@ const forestData = [
         "fee": "일반 : 1000원+청소년 : 600원+어린이 : 300원",
         "stay": "Y",
         "facility": "제1산림문화휴양관, 제2산림문화휴양관, 숲속의집, 숲속수련장(중형, 소형), 대형숲속수영장(회의실), 야영장, 인도네시아 전통 전시관, 숲생태체험실, BIY목공교실",
+        "interest": "682",
         "lat": "37.52907993",
         "lng": "128.2968658"
     },
@@ -447,7 +455,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0201",
         "address": "전남 진도군 임회면 동령개길 1-92",
         "phone": "061-542-2346",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "578"
     },
     {
         "name": "진주 월아산 자연휴양림",
@@ -479,7 +488,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0196",
         "address": "전남 장흥군 관산읍 칠관로 842-1150",
         "phone": "061-867-6974",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "265"
     },
     {
         "name": "주작산자연휴양림",
@@ -502,7 +512,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0108",
         "address": "경기 양평군 옥천면 중미산로 1152",
         "phone": "031-771-7166",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "1389"
     },
     {
         "name": "중산자연휴양림",
@@ -533,6 +544,7 @@ const forestData = [
         "fee": "개인 어른1000원+개인 청소년 600원+개인 어린이 300원+단체 어른800원+단체 군인청소년 500원+단체 어린이 200원+다자녀가정 면제+동절기 입장료면제(12월~3월)",
         "stay": "Y",
         "facility": "숲속의집+휴양관",
+        "interest": "656",
         "lat": "35.34644465",
         "lng": "127.6430043"
     },
@@ -676,7 +688,8 @@ const forestData = [
         "url": "https://foresttrip.go.kr/0101/",
         "address": "경기 가평군 설악면 유명산길 79-53",
         "phone": "031-589-5487",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "2172"
     },
     {
         "name": "의왕바라산자연휴양림",
@@ -716,6 +729,7 @@ const forestData = [
         "address": "강원 춘천시 사북면 사여골길 294",
         "phone": "033-243-9261",
         "closed": "매주 화요일",
+        "interest": "599",
         "lat": "38.013587",
         "lng": "127.759476"
     },
@@ -732,6 +746,7 @@ const forestData = [
         "fee": "무료",
         "stay": "Y",
         "facility": "숲속의집+산림문화휴양관+숲속수련장+야영시설",
+        "interest": "619",
         "lat": "35.64834675",
         "lng": "129.026208"
     },
@@ -740,7 +755,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0224",
         "address": "경기 포천시 화현면 화동로 184",
         "phone": "031-534-6330",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "730"
     },
     {
         "name": "운장산 자연휴양림",
@@ -755,6 +771,7 @@ const forestData = [
         "fee": "일반인(개인 1000+단체 800)+청소년(개인 600+단체 500)+어린이(개인 300+단체 200)",
         "stay": "Y",
         "facility": "숲속의집+연립동+산림문화휴양관+숲속수련관",
+        "interest": "386",
         "lat": "35.89924607",
         "lng": "127.4211096"
     },
@@ -787,6 +804,7 @@ const forestData = [
         "fee": "무료",
         "stay": "Y",
         "facility": "숲속의집+휴양관",
+        "interest": "325",
         "lat": "35.18540272",
         "lng": "128.7754769"
     },
@@ -811,7 +829,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0220",
         "address": "충남 서산시 운산면 마애삼존불길 339",
         "phone": "041-664-1971",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "460"
     },
     {
         "name": "옥화자연휴양림",
@@ -851,6 +870,7 @@ const forestData = [
         "address": "강원 인제군 북면 연화동길 7",
         "phone": "033-462-5031",
         "closed": "매주 화요일",
+        "interest": "566",
         "lat": "38.232837",
         "lng": "128.351168"
     },
@@ -891,7 +911,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0191",
         "address": "충남 보령시 청라면 오서산길 531",
         "phone": "041-936-5465",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "434"
     },
     {
         "name": "옥성자연휴양림",
@@ -1057,6 +1078,7 @@ const forestData = [
         "fee": "입장료1000+주차료3000+숙박비 약 76000",
         "stay": "Y",
         "facility": "방문자안내센터+커뮤니티센터+휴양관 2동(28실)+숲속의집 28동(28실)+해안탐방로+달맞이 화원+태양전망대+원형전망대",
+        "interest": "1675",
         "lat": "35.82195511",
         "lng": "126.4558226"
     },
@@ -1080,6 +1102,7 @@ const forestData = [
         "fee": "일반(개인 1000원+단체 800원)+청소년(개인 600원+단체 500원)+어린이(개인 300원+단체200원)",
         "stay": "Y",
         "facility": "숲속의집14동+안내센터+다목적광장 등",
+        "interest": "855",
         "lat": "37.77382293",
         "lng": "126.9421758"
     },
@@ -1143,7 +1166,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0105",
         "address": "울산 울주군 상북면 청수골길 175",
         "phone": "052-254-2123",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "751"
     },
     {
         "name": "속리산숲체험휴양마을",
@@ -1262,7 +1286,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0115",
         "address": "충북 보은군 장안면 속리산로 256",
         "phone": "043-543-6282",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "578"
     },
     {
         "name": "석모도자연휴양림",
@@ -1333,7 +1358,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0300",
         "address": "충북 청주시 청원구 내수읍 덕암2길 162",
         "phone": "043-216-0052",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "450"
     },
     {
         "name": "생거진천자연휴양림",
@@ -1388,7 +1414,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0103",
         "address": "경기 양평군 단월면 고북길 347",
         "phone": "031-774-8133",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "1542"
     },
     {
         "name": "산청한방자연휴양림",
@@ -1412,6 +1439,7 @@ const forestData = [
         "address": "강원 홍천군 내면 삼봉휴양길 276",
         "phone": "033-435-8536",
         "closed": "매주 화요일",
+        "interest": "746",
         "lat": "37.854918",
         "lng": "128.462905"
     },
@@ -1572,6 +1600,7 @@ const forestData = [
         "fee": "0",
         "stay": "Y",
         "facility": "숙박동+카라반+야영장+자동차야영장(카라반사이트)+목재문화체험장+치유의 숲 및 치유의 숲 센터+백운산 산림박물관+식물생태숲+제1황톳길+제2황톳길+산책로+운동장",
+        "interest": "459",
         "lat": "35.05164287",
         "lng": "127.5985311"
     },
@@ -1588,6 +1617,7 @@ const forestData = [
         "fee": "숲속의집(5인실58000원~106000원+6인실75000원~134000원+8인실98000원~173000원),휴양관(5인실56000원~102000원+7인실75000원~134000원+9인실95000원~162000원),연립동(5인실58000원~106000원)",
         "stay": "Y",
         "facility": "숲속의집+휴양관+연립동+체험교실+물놀이장(현재 미운영)",
+        "interest": "1869",
         "lat": "35.5828780000",
         "lng": "126.5237280000"
     },
@@ -1613,6 +1643,7 @@ const forestData = [
         "address": "강원 철원군 근남면 하오재로 818",
         "phone": "033-458-9426",
         "closed": "매주 화요일",
+        "interest": "313",
         "lat": "38.143974",
         "lng": "127.473253"
     },
@@ -1622,6 +1653,7 @@ const forestData = [
         "address": "강원 인제군 기린면 방태산길 241",
         "phone": "033-463-8590",
         "closed": "매주 화요일",
+        "interest": "763",
         "lat": "37.922774",
         "lng": "128.39805"
     },
@@ -1734,6 +1766,7 @@ const forestData = [
         "fee": "일반 1000원+단체 800원",
         "stay": "Y",
         "facility": "숲속의 집+산림문화휴양관+세미나실+숲속공예마을(체험) 등",
+        "interest": "317",
         "lat": "35.44405218",
         "lng": "126.7514053"
     },
@@ -1791,6 +1824,7 @@ const forestData = [
         "address": "강원 양양군 서면 미천골길 115",
         "phone": "033-673-1806",
         "closed": "매주 화요일",
+        "interest": "828",
         "lat": "37.93692",
         "lng": "128.530937"
     },
@@ -1813,7 +1847,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0303",
         "address": "인천 중구 하나개로 74",
         "phone": "032-751-0426",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "993"
     },
     {
         "name": "무주향로산자연휴양림",
@@ -1836,6 +1871,7 @@ const forestData = [
         "address": "강원 평창군 진부면 아차골길 132",
         "phone": "033-334-8815",
         "closed": "매주 화요일",
+        "interest": "488",
         "lat": "37.567665",
         "lng": "128.582111"
     },
@@ -1955,6 +1991,7 @@ const forestData = [
         "fee": "어른:1000+청소년:600+어린이:300",
         "stay": "Y",
         "facility": "산림문화휴양관+연립동+야영시설",
+        "interest": "716",
         "lat": "36.67090364",
         "lng": "127.9619774"
     },
@@ -1995,14 +2032,16 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0141",
         "address": "전북특별자치도 무주군 무풍면 구천동로 530-62",
         "phone": "063-322-1097",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "761"
     },
     {
         "name": "달음산 자연휴양림",
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0202",
         "address": "부산 기장군 일광면 화용길 299-106",
         "phone": "051-722-3023",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "891"
     },
     {
         "name": "대관령 자연휴양림",
@@ -2010,6 +2049,7 @@ const forestData = [
         "address": "강원 강릉시 성산면 삼포암길 133",
         "phone": "033-641-9990",
         "closed": "매주 화요일",
+        "interest": "924",
         "lat": "37.712651",
         "lng": "128.786049"
     },
@@ -2057,7 +2097,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0200",
         "address": "전남 순천시 낙안면 민속마을길 1600",
         "phone": "061-754-4400",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "448"
     },
     {
         "name": "남원자연휴양림",
@@ -2088,6 +2129,7 @@ const forestData = [
         "fee": "성인 1000원",
         "stay": "Y",
         "facility": "생태숲+숲속의집 등",
+        "interest": "1380",
         "lat": "34.75216391",
         "lng": "128.0201316"
     },
@@ -2339,7 +2381,8 @@ const forestData = [
         "url": "https://www.foresttrip.go.kr/indvz/main.do?hmpgId=0184",
         "address": "경북 영양군 수비면 검마산길 191",
         "phone": "054-682-9009",
-        "closed": "매주 화요일"
+        "closed": "매주 화요일",
+        "interest": "370"
     },
     {
         "name": "검봉산 자연휴양림",
@@ -2347,6 +2390,7 @@ const forestData = [
         "address": "강원 삼척시 원덕읍 임원안길 525-145",
         "phone": "033-574-2553",
         "closed": "매주 화요일",
+        "interest": "801",
         "lat": "37.237128",
         "lng": "129.299003"
     },
@@ -2427,6 +2471,7 @@ const forestData = [
         "address": "강원 정선군 정선읍 가리왕산로 791",
         "phone": "033-562-5833",
         "closed": "매주 화요일",
+        "interest": "1163",
         "lat": "37.426849",
         "lng": "128.568085"
     },

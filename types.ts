@@ -31,6 +31,8 @@ export interface Forest {
   capacity?: string;
   lat?: number;
   lng?: number;
+  /** 관심시설 등록 인원 (산림청, 2023-04 기준, 국립휴양림만 제공) */
+  interest?: number;
 }
 
 export interface ReservationStep {

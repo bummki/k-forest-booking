@@ -48,6 +48,7 @@ const App: React.FC = () => {
   const [selectedRegion, setSelectedRegion] = useState<Region>(Region.ALL);
   const [selectedTheme, setSelectedTheme] = useState<Theme>(Theme.ALL);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'default' | 'popular'>('default');
   const [forests, setForests] = useState<Forest[]>(FORESTS);
   const [dataStatus, setDataStatus] = useState<'loading' | 'api' | 'fallback'>('loading');
   const [dataMessage, setDataMessage] = useState('');
@@ -64,7 +65,7 @@ const App: React.FC = () => {
 
   const filteredForests = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    return forests.filter((f) => {
+    const result = forests.filter((f) => {
       const matchesRegion = selectedRegion === Region.ALL || f.region === selectedRegion;
       const matchesTheme = selectedTheme === Theme.ALL || f.theme === selectedTheme;
       const matchesSearch = query === '' ||
@@ -72,7 +73,13 @@ const App: React.FC = () => {
         f.location.toLowerCase().includes(query);
       return matchesRegion && matchesTheme && matchesSearch;
     });
-  }, [forests, selectedRegion, selectedTheme, searchQuery]);
+
+    // 관심등록 인원은 국립휴양림에만 있으므로, 값이 없는 곳은 뒤로 보낸다.
+    if (sortBy === 'popular') {
+      return [...result].sort((a, b) => (b.interest ?? -1) - (a.interest ?? -1));
+    }
+    return result;
+  }, [forests, selectedRegion, selectedTheme, searchQuery, sortBy]);
 
   // Gate view removed
 
@@ -457,6 +464,30 @@ const App: React.FC = () => {
                   </button>
                 ))}
               </div>
+              <div className="flex flex-col items-center gap-2 pt-2">
+                <div className="inline-flex rounded-full border border-stone-200 bg-white p-1">
+                  {([['default', '이름순'], ['popular', '인기순']] as const).map(([key, label]) => (
+                    <button
+                      key={key}
+                      onClick={() => setSortBy(key)}
+                      aria-pressed={sortBy === key}
+                      className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${sortBy === key
+                        ? 'bg-stone-900 text-white'
+                        : 'text-stone-500 hover:text-stone-800'
+                        }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {sortBy === 'popular' && (
+                  <p className="text-[11px] text-stone-400 max-w-md text-center leading-relaxed">
+                    산림청 국립자연휴양림관리소 관심시설 등록 인원(2023년 4월 기준) 순입니다.
+                    국립휴양림 45곳만 제공되며, 자료가 없는 휴양림은 뒤에 표시됩니다.
+                  </p>
+                )}
+              </div>
+
               {/* 리스트 상단 지역 필터 아래 광고 */}
               <AdUnit slot="7932374339" format="horizontal" className="mt-10" />
             </div>
@@ -481,10 +512,18 @@ const App: React.FC = () => {
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute top-4 right-4">
+                      <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
                         <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black text-stone-800 uppercase">
                           {forest.region}
                         </span>
+                        {forest.interest !== undefined && (
+                          <span
+                            className="bg-emerald-700/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black text-white"
+                            title="산림청 관심시설 등록 인원 (2023년 4월 기준)"
+                          >
+                            관심 {forest.interest.toLocaleString('ko-KR')}명
+                          </span>
+                        )}
                       </div>
                       {/* Ad Stamp Removed */}
                     </div>
