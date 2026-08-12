@@ -27,6 +27,10 @@ export interface Forest {
   imageUrl: string;
   bookingUrl: string;
   isAd?: boolean;
+  fee?: string;
+  capacity?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface ReservationStep {

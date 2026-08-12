@@ -132,16 +132,26 @@ const App: React.FC = () => {
         const apiForests = await fetchForestsFromPublicData(serviceKey);
         if (!isActive) return;
 
-        if (apiForests.length > 0) {
-          setForests(apiForests);
+        // 응답 스키마가 바뀌면 이름·주소가 빈 값으로 채워진 목록이 만들어질 수 있다.
+        // 로컬 데이터보다 확실히 나을 때만 교체한다.
+        const usable = apiForests.filter(
+          (f) => f.name && !f.name.startsWith('휴양림 ') && f.location !== '전국'
+        );
+
+        if (usable.length >= FORESTS.length * 0.8) {
+          setForests(usable);
           setDataStatus('api');
-          setDataMessage(`공공데이터 API 기준 ${apiForests.length}건 로드됨`);
+          setDataMessage(`공공데이터 API 기준 ${usable.length}건 로드됨`);
           return;
         }
 
         setForests(FORESTS);
         setDataStatus('fallback');
-        setDataMessage('API 응답에 데이터가 없어 로컬 데이터를 표시 중입니다.');
+        setDataMessage(
+          apiForests.length === 0
+            ? 'API 응답에 데이터가 없어 로컬 데이터를 표시 중입니다.'
+            : `API 응답 ${apiForests.length}건 중 유효 ${usable.length}건뿐이라 로컬 데이터를 표시 중입니다.`
+        );
       } catch (error) {
         if (!isActive) return;
         setForests(FORESTS);
