@@ -76,11 +76,11 @@ def main():
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>국립자연휴양림 인기 순위 TOP {TOP_N} | 숲나들e 안내</title>
+  <title>국립자연휴양림 인기 순위 TOP {TOP_N} | 숲으로</title>
   <meta name="description" content="{html.escape(desc, quote=True)}">
   <link rel="canonical" href="{SITE}/ranking.html">
   <meta property="og:type" content="article">
-  <meta property="og:site_name" content="숲나들e 자연휴양림 안내">
+  <meta property="og:site_name" content="숲으로">
   <meta property="og:title" content="국립자연휴양림 인기 순위 TOP {TOP_N}">
   <meta property="og:description" content="{html.escape(desc, quote=True)}">
   <meta property="og:url" content="{SITE}/ranking.html">

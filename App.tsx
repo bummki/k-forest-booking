@@ -303,7 +303,7 @@ const App: React.FC = () => {
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             <span className="text-2xl" aria-hidden="true">🌲</span>
-            <span className="font-black text-xl text-emerald-800 tracking-tighter">숲나들e</span>
+            <span className="font-black text-xl text-emerald-800 tracking-tighter">숲으로</span>
           </button>
           <div className="hidden md:flex gap-8 text-sm font-medium text-stone-600">
             <a href="#schedule" className="hover:text-emerald-700 transition-colors">예약일정</a>
@@ -752,7 +752,7 @@ const App: React.FC = () => {
             <div className="bg-stone-900 rounded-[4rem] p-12 md:p-24 text-white relative overflow-hidden">
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                 <div className="space-y-6">
-                  <h2 className="text-4xl md:text-6xl font-black leading-tight">숲나들e<br />간편 예약 가이드</h2>
+                  <h2 className="text-4xl md:text-6xl font-black leading-tight">자연휴양림<br />간편 예약 가이드</h2>
                   <p className="text-stone-400 text-lg leading-relaxed">전국의 국립자연휴양림은 통합 아이디 하나로<br />언제 어디서나 쉽게 예약할 수 있습니다.</p>
                   <div className="pt-8">
                     <a href="https://www.foresttrip.go.kr" target="_blank" rel="noopener noreferrer" className="inline-block bg-emerald-600 px-12 py-5 rounded-full font-black hover:bg-emerald-500 transition-all shadow-xl">공식 홈페이지 방문</a>
@@ -786,10 +786,10 @@ const App: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-center md:justify-start gap-2">
                 <span className="text-2xl">🌲</span>
-                <span className="text-2xl font-black text-emerald-800 tracking-tighter">숲나들e 통합 안내</span>
+                <span className="text-2xl font-black text-emerald-800 tracking-tighter">숲으로</span>
               </div>
               <p className="max-w-md text-sm text-stone-500 leading-relaxed font-medium">
-                본 웹사이트는 전국 국립자연휴양림 이용자들의 편의를 위해 정보를 제공하는 독립적인 랜딩 페이지입니다. 예약 및 법적 고지는 공식 홈페이지를 확인하세요.
+                「숲으로」는 전국 자연휴양림 정보를 모아 안내하는 민간 사이트입니다. 산림청 및 숲나들e와 관련이 없으며, 예약·결제와 법적 고지는 숲나들e 공식 홈페이지를 따릅니다.
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-8 text-sm font-black text-stone-800">

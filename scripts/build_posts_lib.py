@@ -233,11 +233,11 @@ def build(rec, idx, fname, css, imgs_all, ctx=None):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{esc(name)} 예약 정보와 이용 가이드 | 숲나들e 안내</title>
+<title>{esc(name)} 예약 정보와 이용 가이드 | 숲으로</title>
 <meta name="description" content="{esc(desc)}">
 <link rel="canonical" href="{canon}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="숲나들e 자연휴양림 안내">
+<meta property="og:site_name" content="숲으로">
 <meta property="og:title" content="{esc(h1)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:image" content="{SITE}/img/{urllib.parse.quote(imgs[0])}">
