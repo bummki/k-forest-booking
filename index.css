@@ -29,3 +29,22 @@
 
   .page-fade-in { animation: none; }
 }
+
+@layer utilities {
+  /* 가로 스크롤 칩 목록에서 스크롤바를 감춘다 */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
